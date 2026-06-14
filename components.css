@@ -1,0 +1,402 @@
+/* ============================================================
+   VibeLoom UI — Components
+   Reusable, theme-aware building blocks. Namespace: vl-
+   Color/space/shadow/radius/font come ONLY from --vl-* tokens.
+   Allowed literals: #fff / #000 / transparent, code-syntax hues,
+   and the "light-island" literals for figures + diagrams (so
+   diagrams stay legible on dark pages). Everything else flips
+   automatically via the tokens defined in tokens.css.
+   ============================================================ */
+
+/* ============================================================
+   1. BUTTONS
+   ============================================================ */
+.vl-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:var(--vl-space-2);
+  font-family:var(--vl-font-sans); font-weight:600; font-size:14.5px;
+  line-height:1.2; white-space:nowrap;
+  padding:var(--vl-space-2) var(--vl-space-4);
+  border:1px solid transparent; border-radius:var(--vl-radius);
+  background:var(--vl-surface-2); color:var(--vl-text);
+  cursor:pointer; text-decoration:none;
+  transition:background .15s ease, color .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+}
+.vl-btn:hover{text-decoration:none}
+.vl-btn:active{transform:translateY(1px)}
+.vl-btn:disabled,.vl-btn[disabled],.vl-btn[aria-disabled="true"]{
+  opacity:.5; cursor:not-allowed; pointer-events:none;
+}
+
+.vl-btn--solid{
+  background:var(--vl-brand-strong); color:var(--vl-on-brand);
+  border-color:var(--vl-brand-strong);
+}
+.vl-btn--solid:hover{background:var(--vl-brand); border-color:var(--vl-brand)}
+
+.vl-btn--ghost{
+  background:transparent; color:var(--vl-text);
+  border-color:var(--vl-border-strong);
+}
+.vl-btn--ghost:hover{background:var(--vl-surface-2); border-color:var(--vl-text-muted)}
+
+.vl-btn--ink{
+  background:var(--vl-surface-invert); color:var(--vl-on-invert);
+  border-color:var(--vl-surface-invert);
+}
+.vl-btn--ink:hover{background:var(--vl-text-2); border-color:var(--vl-text-2)}
+
+.vl-btn--sm{font-size:13px; padding:var(--vl-space-1) var(--vl-space-3); gap:var(--vl-space-1)}
+.vl-btn--lg{font-size:16.5px; padding:var(--vl-space-3) var(--vl-space-6); gap:var(--vl-space-3)}
+
+/* ============================================================
+   2. LABELS — kicker / eyebrow
+   ============================================================ */
+.vl-kicker{
+  display:inline-block;
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  font-size:12px; line-height:1;
+  padding:var(--vl-space-1) var(--vl-space-2);
+  background:var(--vl-brand-strong); color:var(--vl-on-brand);
+  border-radius:var(--vl-radius-sm);
+}
+.vl-eyebrow{
+  display:inline-block;
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  font-size:12px; line-height:1;
+  padding:var(--vl-space-1) var(--vl-space-2);
+  background:var(--vl-surface-invert); color:var(--vl-on-invert);
+  border-radius:var(--vl-radius-sm);
+}
+.vl-eyebrow b{color:var(--vl-brand)}
+
+/* ============================================================
+   3. CALLOUTS — theme-aware neutral surfaces + colored accents
+   ============================================================ */
+.vl-callout{
+  border:1px solid var(--vl-border);
+  border-left:5px solid var(--vl-border-strong);
+  border-radius:var(--vl-radius);
+  background:var(--vl-surface-2);
+  padding:var(--vl-space-3) var(--vl-space-4);
+  box-shadow:var(--vl-shadow-sm);
+  margin:var(--vl-space-4) 0;
+}
+.vl-callout__head{
+  display:flex; align-items:center; gap:var(--vl-space-2);
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.05em;
+  font-size:13.5px; line-height:1.2;
+  margin-bottom:var(--vl-space-2);
+}
+.vl-callout__head:last-child{margin-bottom:0}
+.vl-callout__icon{
+  display:inline-flex; align-items:center; justify-content:center;
+  flex:0 0 auto; width:21px; height:21px;
+  border-radius:var(--vl-radius-sm);
+  color:#fff; font-size:13px; font-weight:700; line-height:1;
+}
+.vl-callout__body{color:var(--vl-text-2)}
+.vl-callout__body > :first-child{margin-top:0}
+.vl-callout__body > :last-child{margin-bottom:0}
+
+/* --take : the editorial takeaway */
+.vl-callout--take{border-left-color:var(--vl-brand); background:var(--vl-brand-soft)}
+.vl-callout--take .vl-callout__icon{background:var(--vl-brand-strong)}
+.vl-callout--take .vl-callout__head{color:var(--vl-brand-text)}
+
+/* --pitfall : watch-out / gotcha */
+.vl-callout--pitfall{border-left-color:var(--vl-brand-strong); background:var(--vl-surface-2)}
+.vl-callout--pitfall .vl-callout__icon{background:var(--vl-brand-strong)}
+.vl-callout--pitfall .vl-callout__head{color:var(--vl-brand-text)}
+
+/* --key : key idea */
+.vl-callout--key{border-left-color:var(--vl-surface-invert); background:var(--vl-surface-3)}
+.vl-callout--key .vl-callout__icon{background:var(--vl-surface-invert)}
+.vl-callout--key .vl-callout__head{color:var(--vl-text)}
+
+/* --def : definition */
+.vl-callout--def{border-left-color:var(--vl-text-2); background:var(--vl-surface-2)}
+.vl-callout--def .vl-callout__icon{background:var(--vl-text-2)}
+.vl-callout--def .vl-callout__head{color:var(--vl-text-2)}
+
+/* --note : aside */
+.vl-callout--note{border-left-color:var(--vl-text-faint); background:var(--vl-surface-2)}
+.vl-callout--note .vl-callout__icon{background:var(--vl-text-faint)}
+.vl-callout--note .vl-callout__head{color:var(--vl-text-muted)}
+
+/* ============================================================
+   4. TABLES
+   ============================================================ */
+.vl-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--vl-border);
+  border-radius:var(--vl-radius);
+  box-shadow:var(--vl-shadow-sm);
+  margin:var(--vl-space-4) 0;
+}
+table.vl-table,
+.vl-prose table{
+  border-collapse:collapse;
+  width:100%;
+  font-family:var(--vl-font-sans);
+  font-size:14.2px;
+  line-height:1.5;
+}
+table.vl-table th,table.vl-table td,
+.vl-prose table th,.vl-prose table td{
+  padding:var(--vl-space-2) var(--vl-space-3);
+  border-bottom:1px solid var(--vl-border);
+  text-align:left; vertical-align:top;
+}
+table.vl-table thead th,
+.vl-prose table thead th{
+  position:sticky; top:0; z-index:1;
+  background:var(--vl-surface-invert); color:var(--vl-on-invert);
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em;
+  font-size:12.5px;
+}
+table.vl-table tbody tr:nth-child(even),
+.vl-prose table tbody tr:nth-child(even){background:var(--vl-surface-2)}
+table.vl-table tbody tr:hover,
+.vl-prose table tbody tr:hover{background:var(--vl-brand-soft)}
+table.vl-table tbody td:first-child,
+.vl-prose table tbody td:first-child{font-weight:600; color:var(--vl-text)}
+table.vl-table tbody tr:last-child td,
+.vl-prose table tbody tr:last-child td{border-bottom:none}
+
+/* cell helpers */
+.vl-num{font-family:var(--vl-font-mono); text-align:right; font-variant-numeric:tabular-nums}
+.vl-yes{color:var(--vl-text); font-weight:700}
+.vl-no{color:var(--vl-brand-text); font-weight:700}
+.vl-maybe{color:var(--vl-text-faint); font-weight:700}
+
+/* ============================================================
+   5. CARDS
+   ============================================================ */
+.vl-card{
+  border:1px solid var(--vl-border);
+  border-radius:var(--vl-radius);
+  padding:var(--vl-space-4);
+  background:var(--vl-surface);
+  box-shadow:var(--vl-shadow-sm);
+}
+.vl-card--soft{background:var(--vl-surface-2)}
+.vl-card__title{
+  font-family:var(--vl-font-display); font-weight:600;
+  font-size:17px; line-height:1.25; color:var(--vl-text);
+  margin:0 0 var(--vl-space-2);
+}
+.vl-card__body{color:var(--vl-text-muted)}
+.vl-card__body > :first-child{margin-top:0}
+.vl-card__body > :last-child{margin-bottom:0}
+
+/* ============================================================
+   6. PILLS
+   ============================================================ */
+.vl-pill{
+  display:inline-flex; align-items:center; gap:var(--vl-space-1);
+  font-family:var(--vl-font-sans); font-weight:600;
+  font-size:12.5px; line-height:1;
+  padding:var(--vl-space-1) var(--vl-space-2);
+  border-radius:999px;
+  background:var(--vl-surface-3); color:var(--vl-text-2);
+}
+.vl-pill--1{background:var(--vl-c1-bg); color:var(--vl-c1-tx)}
+.vl-pill--2{background:var(--vl-c2-bg); color:var(--vl-c2-tx)}
+.vl-pill--3{background:var(--vl-c3-bg); color:var(--vl-c3-tx)}
+.vl-pill--4{background:var(--vl-c4-bg); color:var(--vl-c4-tx)}
+.vl-pill--5{background:var(--vl-c5-bg); color:var(--vl-c5-tx)}
+.vl-pill--6{background:var(--vl-c6-bg); color:var(--vl-c6-tx)}
+.vl-pill--s{background:var(--vl-cs-bg); color:var(--vl-cs-tx)}
+.vl-pill--brand{background:var(--vl-brand-strong); color:var(--vl-on-brand)}
+.vl-pill--ink{background:var(--vl-surface-invert); color:var(--vl-on-invert)}
+
+/* ============================================================
+   7. CODE — dark island in BOTH themes (fixed dark literals)
+   ============================================================ */
+.vl-code,
+.vl-prose pre{
+  background:#15130f; color:#f4efe6;
+  border:1px solid #2a2620; border-radius:var(--vl-radius);
+  padding:var(--vl-space-4);
+  overflow-x:auto;
+  font-family:var(--vl-font-mono); font-size:13.5px; line-height:1.6;
+  box-shadow:var(--vl-shadow-sm);
+  margin:var(--vl-space-4) 0;
+}
+.vl-code code,
+.vl-prose pre code{
+  background:none; border:none; padding:0; margin:0;
+  font:inherit; color:inherit; white-space:pre;
+}
+/* inline code */
+.vl-prose code,
+.vl-code-inline{
+  background:var(--vl-surface-3); color:var(--vl-brand-text);
+  border:1px solid var(--vl-border); border-radius:var(--vl-radius-sm);
+  padding:.12em .4em;
+  font-family:var(--vl-font-mono); font-size:.86em;
+}
+/* syntax spans (tuned for the dark island) */
+.vl-cm{color:#8a8175}   /* comment   */
+.vl-kw{color:#ff8a7a}   /* keyword   */
+.vl-st{color:#e7dcc4}   /* string    */
+.vl-fn{color:#f3ede2}   /* function  */
+.vl-nm{color:#ffa79c}   /* name      */
+.vl-nu{color:#f0b59a}   /* number    */
+
+/* ============================================================
+   8. FIGURES + DIAGRAMS — light island in BOTH themes
+   Fixed light literals keep SVG diagrams legible on dark pages;
+   node colors use the theme-independent --vl-c* tokens.
+   ============================================================ */
+.vl-figure{
+  background:#fff;
+  border:1px solid #e6e4e0; border-radius:var(--vl-radius);
+  box-shadow:var(--vl-shadow);
+  overflow:hidden;
+  margin:var(--vl-space-5) 0;
+}
+.vl-figure__head{
+  display:flex; align-items:center; gap:var(--vl-space-2);
+  background:#f4f4f3;
+  border-bottom:1px solid #e6e4e0;
+  padding:var(--vl-space-2) var(--vl-space-3);
+}
+.vl-figure__title{
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em;
+  font-size:13px; color:#2a2a2a;
+}
+.vl-figure__num{
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--vl-brand-strong); color:#fff;
+  font-family:var(--vl-font-display); font-weight:600;
+  font-size:11.5px; line-height:1;
+  padding:var(--vl-space-1) var(--vl-space-2);
+  border-radius:var(--vl-radius-sm);
+}
+.vl-figure__body{background:#fff; padding:var(--vl-space-4)}
+.vl-figure svg{display:block; width:100%; height:auto}
+.vl-figure figcaption{
+  background:#f7f7f6; color:#5a5a5a;
+  border-top:1px solid #e6e4e0;
+  padding:var(--vl-space-2) var(--vl-space-3);
+  font-size:13px; line-height:1.5;
+}
+.vl-figure figcaption::before{content:"\25B8 "; color:var(--vl-brand); font-weight:800}
+
+/* ---- diagram primitives, scoped under .vl-figure ---- */
+.vl-figure svg rect{rx:3px}
+
+/* text sizes / weights */
+.vl-figure .dg-t{font-family:var(--vl-font-sans); font-size:13px}
+.vl-figure .dg-t-sm{font-family:var(--vl-font-sans); font-size:11.5px}
+.vl-figure .dg-t-xs{font-family:var(--vl-font-sans); font-size:10px}
+.vl-figure .dg-t-lg{font-family:var(--vl-font-sans); font-size:15px}
+.vl-figure .dg-t-title{font-family:var(--vl-font-display); text-transform:uppercase; letter-spacing:.04em; font-size:14px}
+.vl-figure .dg-mono{font-family:var(--vl-font-mono); font-size:12px}
+.vl-figure .dg-b{font-weight:700}
+.vl-figure .dg-sb{font-weight:600}
+
+/* text fills */
+.vl-figure .dg-ink{fill:#1a1a1a}
+.vl-figure .dg-muted{fill:#5a5a5a}
+.vl-figure .dg-faint{fill:#707070}
+.vl-figure .dg-inv{fill:#fff}
+
+/* text anchors */
+.vl-figure .dg-center{text-anchor:middle}
+.vl-figure .dg-end{text-anchor:end}
+
+/* category node fills / strokes / solids / text */
+.vl-figure .fill-1{fill:var(--vl-c1-bg)}
+.vl-figure .fill-2{fill:var(--vl-c2-bg)}
+.vl-figure .fill-3{fill:var(--vl-c3-bg)}
+.vl-figure .fill-4{fill:var(--vl-c4-bg)}
+.vl-figure .fill-5{fill:var(--vl-c5-bg)}
+.vl-figure .fill-6{fill:var(--vl-c6-bg)}
+.vl-figure .fill-s{fill:var(--vl-cs-bg)}
+
+.vl-figure .stroke-1{stroke:var(--vl-c1-ac)}
+.vl-figure .stroke-2{stroke:var(--vl-c2-ac)}
+.vl-figure .stroke-3{stroke:var(--vl-c3-ac)}
+.vl-figure .stroke-4{stroke:var(--vl-c4-ac)}
+.vl-figure .stroke-5{stroke:var(--vl-c5-ac)}
+.vl-figure .stroke-6{stroke:var(--vl-c6-ac)}
+.vl-figure .stroke-s{stroke:var(--vl-cs-ac)}
+
+.vl-figure .solid-1{fill:var(--vl-c1-ac)}
+.vl-figure .solid-2{fill:var(--vl-c2-ac)}
+.vl-figure .solid-3{fill:var(--vl-c3-ac)}
+.vl-figure .solid-4{fill:var(--vl-c4-ac)}
+.vl-figure .solid-5{fill:var(--vl-c5-ac)}
+.vl-figure .solid-6{fill:var(--vl-c6-ac)}
+.vl-figure .solid-s{fill:var(--vl-cs-ac)}
+
+.vl-figure .txt-1{fill:var(--vl-c1-tx)}
+.vl-figure .txt-2{fill:var(--vl-c2-tx)}
+.vl-figure .txt-3{fill:var(--vl-c3-tx)}
+.vl-figure .txt-4{fill:var(--vl-c4-tx)}
+.vl-figure .txt-5{fill:var(--vl-c5-tx)}
+.vl-figure .txt-6{fill:var(--vl-c6-tx)}
+.vl-figure .txt-s{fill:var(--vl-cs-tx)}
+
+/* dark + neutral node helpers */
+.vl-figure .fill-d{fill:var(--vl-cd-bg)}
+.vl-figure .stroke-d{stroke:#3a3a3a}
+.vl-figure .fill-bg{fill:#f7f7f6}
+.vl-figure .fill-white{fill:#fff}
+
+/* boxes + edges (fixed dark so they read on the light canvas) */
+.vl-figure .box{stroke-width:1.5px}
+.vl-figure .box-2{stroke-width:2px}
+.vl-figure .edge{fill:none; stroke:#5a5a5a; stroke-width:1.7px; marker-end:url(#vl-arrow)}
+.vl-figure .edge-2{fill:none; stroke:#5a5a5a; stroke-width:1.7px}
+.vl-figure .edge-strong{stroke:#e84057; marker-end:url(#vl-arrowB)}
+.vl-figure .edge-d{stroke-dasharray:5 4}
+.vl-figure .edge-thick{stroke-width:2.4px}
+.vl-figure .grid-line{stroke:#e6e4e0; stroke-width:1px}
+.vl-figure .dg-divider{stroke:#e6e4e0; stroke-width:1px; stroke-dasharray:3 3}
+.vl-figure .dg-dashed{stroke-dasharray:5 4}
+
+/* ============================================================
+   9. SOURCES / CITATIONS
+   ============================================================ */
+.vl-sources{
+  border-top:2px solid var(--vl-text);
+  margin:var(--vl-space-6) 0 0;
+  padding-top:var(--vl-space-3);
+}
+.vl-sources__h{
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em;
+  font-size:12.5px; color:var(--vl-text-2);
+  margin:0 0 var(--vl-space-2);
+}
+.vl-sources ol{margin:0; padding-left:22px}
+.vl-sources li{margin:var(--vl-space-1) 0; color:var(--vl-text-muted); font-size:14px; line-height:1.5}
+sup.vl-cite{font-size:.72em; line-height:0}
+sup.vl-cite a{color:var(--vl-brand-text); font-weight:700; text-decoration:none}
+sup.vl-cite a:hover{text-decoration:underline}
+
+/* ============================================================
+   10. KBD + TAGS
+   ============================================================ */
+.vl-kbd{
+  display:inline-block;
+  font-family:var(--vl-font-mono); font-size:.82em; line-height:1;
+  padding:.18em .45em;
+  background:var(--vl-surface-3); color:var(--vl-text-2);
+  border:1px solid var(--vl-border-strong);
+  border-bottom-width:2px;
+  border-radius:var(--vl-radius-sm);
+}
+.vl-tags{display:flex; flex-wrap:wrap; gap:var(--vl-space-2); align-items:center}
+
+/* --- course migration additions --- */
+.vl-code-label{font-family:var(--vl-font-display);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--vl-text-faint);font-weight:600;margin:18px 0 -10px}

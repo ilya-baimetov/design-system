@@ -1,0 +1,90 @@
+/* ============================================================
+   VibeLoom UI — Base & Prose
+   Safe global reset + page helper + content typography (.vl-prose).
+   Tables, code and figures live in components.css (incl. their
+   .vl-prose variants), so this file deliberately doesn't style them.
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:border-box}
+:where(html){-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+
+/* Put this on <body> (or any wrapper) to adopt the theme surface + type */
+.vl-page{
+  margin:0;
+  background:var(--vl-surface);
+  color:var(--vl-text);
+  font-family:var(--vl-font-sans);
+  font-size:16.5px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+::selection{background:var(--vl-brand); color:var(--vl-on-brand)}
+
+/* Accessible focus ring on interactive elements */
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{
+  outline:2px solid transparent;
+  box-shadow:var(--vl-ring);
+  border-radius:var(--vl-radius-sm);
+}
+
+/* ---------- Prose: rich content typography ----------
+   Wrap article/markdown content in <… class="vl-prose"> */
+.vl-prose{color:var(--vl-text); font-family:var(--vl-font-sans); line-height:1.65}
+.vl-prose > :first-child{margin-top:0}
+
+.vl-prose h1,.vl-prose h2,.vl-prose h3{color:var(--vl-text)}
+.vl-prose h1{
+  font-family:var(--vl-font-display); font-weight:800;
+  font-size:clamp(30px,5vw,48px); line-height:1.05; letter-spacing:-.01em;
+  margin:0 0 14px;
+}
+.vl-prose h2{
+  font-family:var(--vl-font-display); font-weight:700; text-transform:uppercase;
+  font-size:clamp(25px,3.6vw,37px); line-height:1.06; letter-spacing:.01em;
+  margin:46px 0 8px;
+}
+.vl-prose h2::before{
+  content:""; display:block; width:46px; height:6px;
+  background:var(--vl-brand); border-radius:1px; margin-bottom:14px;
+}
+.vl-prose h3{
+  font-weight:800; font-size:21px; letter-spacing:-.01em;
+  margin:34px 0 10px; padding-left:14px; border-left:3px solid var(--vl-brand);
+}
+.vl-prose h4{font-weight:700; font-size:16.5px; margin:24px 0 8px; color:var(--vl-text-2)}
+.vl-prose h5{font-weight:700; font-size:14px; margin:20px 0 6px; color:var(--vl-text-2)}
+.vl-prose h6{
+  font-family:var(--vl-font-display); text-transform:uppercase; letter-spacing:.08em;
+  font-size:12px; font-weight:600; color:var(--vl-text-faint); margin:18px 0 6px;
+}
+
+.vl-prose p{margin:13px 0}
+.vl-prose .vl-lead, .vl-lead{font-size:18px; line-height:1.6; color:var(--vl-text-muted)}
+.vl-prose a{color:var(--vl-brand-text); text-decoration:none; text-underline-offset:2px}
+.vl-prose a:hover{text-decoration:underline}
+.vl-prose strong{font-weight:700; color:var(--vl-text)}
+.vl-prose em{font-style:italic}
+
+.vl-prose ul,.vl-prose ol{margin:13px 0; padding-left:22px}
+.vl-prose li{margin:7px 0}
+.vl-prose li::marker{color:var(--vl-brand)}
+
+.vl-prose blockquote{
+  margin:20px 0; padding:6px 0 6px 18px;
+  border-left:4px solid var(--vl-brand);
+  color:var(--vl-text-muted); font-size:16.5px;
+}
+.vl-prose blockquote p{margin:6px 0}
+
+.vl-prose hr{border:none; border-top:1px solid var(--vl-border); margin:30px 0}
+.vl-prose img,.vl-prose svg{max-width:100%; height:auto}
+.vl-prose small{font-size:.82em; color:var(--vl-text-faint)}
+.vl-prose sub,.vl-prose sup{font-size:.72em; line-height:0}
+
+a{color:var(--vl-brand-text)}                 /* links outside prose, too */
+a:hover{text-decoration:underline}
+
+/* --- course migration additions --- */
+.vl-prose h2,.vl-prose h3{scroll-margin-top:24px}

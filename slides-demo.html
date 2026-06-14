@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VibeLoom UI — Slides demo · Building Agentic Systems</title>
+<link rel="stylesheet" href="theme.css">
+<script defer src="slides.js"></script>
+</head>
+<body class="vl-page">
+
+<!-- Shared SVG defs: arrow markers used by inline diagrams -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="vl-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5a5a5a"></path>
+    </marker>
+    <marker id="vl-arrowB" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e84057"></path>
+    </marker>
+    <marker id="vl-arrowG" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"></path>
+    </marker>
+    <marker id="vl-dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="6" markerHeight="6">
+      <circle cx="3" cy="3" r="3" fill="#5a5a5a"></circle>
+    </marker>
+  </defs>
+</svg>
+
+<!-- Floating theme toggle -->
+<button class="vl-deck__btn" type="button" onclick="vlToggleTheme()" aria-label="Toggle light or dark theme">Theme</button>
+
+<div class="vl-deck">
+
+  <!-- 1 · Title -->
+  <section class="vl-slide vl-slide--title">
+    <span class="vl-slide__kicker">VibeLoom UI · Deck</span>
+    <h1 class="vl-slide__title">Building <span class="vl-slide__hl">Agentic</span> Systems</h1>
+    <p class="vl-slide__lead">A field guide to designing, bounding, and observing LLM agents that survive contact with production.</p>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 2 · Section divider -->
+  <section class="vl-slide vl-slide--section">
+    <span class="vl-slide__kicker">Part One</span>
+    <h2 class="vl-slide__title">From demo<br>to dependable</h2>
+    <p class="vl-slide__lead">The core three components win a hackathon. The other six earn trust.</p>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 3 · Bulleted content -->
+  <section class="vl-slide">
+    <span class="vl-slide__kicker">Anatomy</span>
+    <h2 class="vl-slide__title">Nine moving parts</h2>
+    <ul class="vl-slide__list">
+      <li><strong>Model</strong> — the reasoning engine that plans and decides each step.</li>
+      <li><strong>Instructions &amp; tools</strong> — the policy it follows and the hands it acts with.</li>
+      <li><strong>Memory &amp; retrieval</strong> — state across turns, grounded in fresh data.</li>
+      <li><strong>Orchestration &amp; runtime</strong> — the control loop and the sandbox it runs in.</li>
+      <li><strong>Guardrails &amp; observability</strong> — the safety shell and how you know it works.</li>
+    </ul>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 4 · Two-column -->
+  <section class="vl-slide vl-slide--two">
+    <span class="vl-slide__kicker">Design tension</span>
+    <h2 class="vl-slide__title">Autonomy vs. control</h2>
+    <div class="vl-slide__cols">
+      <div class="vl-slide__body">
+        <p><strong>More autonomy</strong> means fewer hand-offs, faster resolution, and emergent problem-solving — but a wider blast radius when the model is wrong.</p>
+      </div>
+      <div class="vl-slide__body">
+        <p><strong>More control</strong> means deterministic gates, sandboxes, and human-in-the-loop checkpoints — predictable, auditable, and slower.</p>
+      </div>
+    </div>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 5 · Figure / diagram -->
+  <section class="vl-slide">
+    <span class="vl-slide__kicker">The loop</span>
+    <h2 class="vl-slide__title">Perceive · plan · act</h2>
+    <figure class="vl-figure">
+      <svg viewBox="0 0 760 240" role="img" aria-label="An agent loop: the model plans, calls a tool, the runtime acts, and observations feed back into the model">
+        <!-- Model -->
+        <rect class="box fill-1 stroke-1" x="40" y="92" width="170" height="64" rx="12" fill="#fbe6ea" stroke="#c43a50" stroke-width="1.5"/>
+        <text class="txt-1" x="125" y="122" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#7d1330">Model</text>
+        <text class="txt-1" x="125" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#7d1330">plans &amp; decides</text>
+        <!-- Tool -->
+        <rect class="box fill-3 stroke-3" x="300" y="92" width="160" height="64" rx="12" fill="#eceae6" stroke="#585858" stroke-width="1.5"/>
+        <text class="txt-3" x="380" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="#2e2e2e">Tool call</text>
+        <!-- Runtime -->
+        <rect class="box fill-2 stroke-2" x="550" y="92" width="170" height="64" rx="12" fill="#e8e6e2" stroke="#1a1a1a" stroke-width="1.5"/>
+        <text class="txt-2" x="635" y="122" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="#1a1a1a">Runtime</text>
+        <text class="txt-2" x="635" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#1a1a1a">action executes</text>
+        <!-- Forward edges -->
+        <path class="edge edge-strong" d="M210 124 L296 124" fill="none" stroke="#e84057" stroke-width="1.8" marker-end="url(#vl-arrowB)"/>
+        <path class="edge edge-strong" d="M460 124 L546 124" fill="none" stroke="#e84057" stroke-width="1.8" marker-end="url(#vl-arrowB)"/>
+        <!-- Observe return edge -->
+        <path class="edge edge-d" d="M635 156 C 635 210 125 210 125 160" fill="none" stroke="#5a5a5a" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#vl-arrow)"/>
+        <text x="380" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="12.5" fill="#5a5a5a">observe &amp; re-plan</text>
+      </svg>
+      <figcaption>The agent control loop: every action produces an observation that feeds the next decision.</figcaption>
+    </figure>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 6 · Quote -->
+  <section class="vl-slide vl-slide--quote">
+    <blockquote class="vl-slide__quote">
+      An AI SRE without a sandbox isn't a rough product. It's a liability with commit access.
+      <cite class="vl-slide__cite">The architect's rule</cite>
+    </blockquote>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 7 · Image (CSS gradient as the background, no external asset) -->
+  <section class="vl-slide vl-slide--image" style="background-image:linear-gradient(135deg,#9b1f38 0%,#1a1a1a 70%,#0a0a0a 100%)">
+    <span class="vl-slide__kicker">In production</span>
+    <h2 class="vl-slide__title">Ship the columns,<br>not the boxes</h2>
+    <p class="vl-slide__lead">Start from each system's defining constraint — latency, blast radius, statistical trust — and let it dictate the whole stack.</p>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+  <!-- 8 · End -->
+  <section class="vl-slide vl-slide--end">
+    <span class="vl-slide__kicker">Thank you</span>
+    <h2 class="vl-slide__title">Go build</h2>
+    <p class="vl-slide__lead">Arrow keys or space to navigate · <strong>F</strong> for fullscreen · <strong>D</strong> to flip theme.</p>
+    <div class="vl-slide__footer"><span>Building Agentic Systems</span><span class="vl-slide__num"></span></div>
+  </section>
+
+</div>
+
+<div class="vl-deck__progress"></div>
+
+</body>
+</html>

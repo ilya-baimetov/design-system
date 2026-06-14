@@ -1,0 +1,364 @@
+/* ============================================================
+   VibeLoom UI — Slides
+   A dependency-free, full-viewport scroll-snap presentation deck.
+   Crimson · cool greys · light + dark. Namespace: --vl-* / .vl-*
+   Pairs with slides.js (keyboard nav, progress, theme). Tokens
+   (colours, fonts, spacing) come from tokens.css — no literals here
+   beyond #fff / #000 / transparent and rgba() image overlays.
+   ============================================================ */
+
+/* ---------------- Deck: the scroll container ---------------- */
+.vl-deck{
+  height:100vh;
+  height:100dvh;                 /* better on mobile browser chrome */
+  overflow-y:auto;
+  overflow-x:hidden;
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+  background:var(--vl-surface);
+  color:var(--vl-text);
+  font-family:var(--vl-font-sans);
+  -webkit-overflow-scrolling:touch;
+}
+
+/* ---------------- Slide: one full-viewport panel ---------------- */
+.vl-slide{
+  position:relative;
+  min-height:100vh;
+  min-height:100dvh;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:var(--vl-space-4);
+  padding:clamp(40px,7vw,100px);
+  border-bottom:1px solid var(--vl-border);
+  overflow:hidden;
+}
+/* Keep slide content clear of the absolutely-positioned footer */
+.vl-slide > :last-child{margin-bottom:0}
+
+/* ---------------- Elements ---------------- */
+.vl-slide__kicker{
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  gap:.5em;
+  font-family:var(--vl-font-display);
+  font-weight:600;
+  font-size:clamp(12px,1.3vw,15px);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--vl-on-brand);
+  background:var(--vl-brand);
+  padding:.3em .7em;
+  border-radius:var(--vl-radius-sm);
+}
+
+.vl-slide__title{
+  margin:0;
+  font-family:var(--vl-font-display);
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:clamp(34px,6vw,76px);
+  line-height:1.02;
+  letter-spacing:.005em;
+  color:var(--vl-text);
+  text-wrap:balance;
+}
+
+/* Inline crimson highlight inside a title or lead */
+.vl-slide__hl{
+  background:var(--vl-brand);
+  color:#fff;
+  padding:.1em .18em;
+  border-radius:var(--vl-radius-sm);
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+}
+
+.vl-slide__lead{
+  margin:0;
+  max-width:34ch;
+  font-size:clamp(18px,2.4vw,26px);
+  line-height:1.45;
+  color:var(--vl-text-muted);
+  text-wrap:balance;
+}
+
+.vl-slide__body{
+  margin:0;
+  max-width:var(--vl-maxw);
+  font-size:clamp(16px,1.8vw,21px);
+  line-height:1.55;
+  color:var(--vl-text-2);
+}
+.vl-slide__body p{margin:0 0 .7em}
+.vl-slide__body p:last-child{margin-bottom:0}
+
+/* Bulleted lists inside a slide */
+.vl-slide__list{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(10px,1.6vw,18px);
+  max-width:var(--vl-maxw);
+  font-size:clamp(16px,1.9vw,22px);
+  line-height:1.45;
+  color:var(--vl-text-2);
+}
+.vl-slide__list > li{
+  position:relative;
+  padding-left:1.6em;
+}
+.vl-slide__list > li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.55em;
+  width:.7em;
+  height:.18em;
+  background:var(--vl-brand);
+  border-radius:1px;
+}
+.vl-slide__list strong{color:var(--vl-text); font-weight:700}
+
+/* Two-column layout */
+.vl-slide__cols{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(24px,4vw,56px);
+  align-items:start;
+  max-width:var(--vl-maxw);
+}
+.vl-slide__cols > *{min-width:0}
+
+/* Footer: deck title (left), page number (right) */
+.vl-slide__footer{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--vl-space-4);
+  padding:clamp(16px,2.4vw,28px) clamp(40px,7vw,100px);
+  font-family:var(--vl-font-display);
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--vl-text-faint);
+}
+.vl-slide__num{font-variant-numeric:tabular-nums}
+
+/* ---------------- Variant: title slide ---------------- */
+.vl-slide--title{
+  align-items:flex-start;
+  text-align:left;
+  gap:clamp(18px,3vw,30px);
+}
+.vl-slide--title .vl-slide__title{font-size:clamp(44px,8.5vw,108px)}
+.vl-slide--title .vl-slide__lead{font-size:clamp(20px,3vw,32px); max-width:30ch}
+
+/* ---------------- Variant: centred ---------------- */
+.vl-slide--center{
+  align-items:center;
+  text-align:center;
+}
+.vl-slide--center .vl-slide__lead,
+.vl-slide--center .vl-slide__body{margin-left:auto; margin-right:auto}
+.vl-slide--center .vl-slide__kicker{align-self:center}
+
+/* ---------------- Variant: section divider & dark ---------------- */
+.vl-slide--section,
+.vl-slide--dark{
+  background:var(--vl-surface-invert);
+  color:var(--vl-on-invert);
+  border-bottom-color:transparent;
+}
+.vl-slide--section{
+  justify-content:center;
+  gap:clamp(18px,3vw,28px);
+}
+.vl-slide--section .vl-slide__title,
+.vl-slide--dark .vl-slide__title{color:var(--vl-on-invert)}
+.vl-slide--section .vl-slide__lead,
+.vl-slide--dark .vl-slide__lead,
+.vl-slide--section .vl-slide__body,
+.vl-slide--dark .vl-slide__body,
+.vl-slide--section .vl-slide__list,
+.vl-slide--dark .vl-slide__list{color:var(--vl-on-invert)}
+.vl-slide--section .vl-slide__list strong,
+.vl-slide--dark .vl-slide__list strong{color:#fff}
+.vl-slide--section .vl-slide__footer,
+.vl-slide--dark .vl-slide__footer{color:var(--vl-on-invert); opacity:.62}
+
+/* Oversized section index numeral (set with data-index or inline) */
+.vl-slide--section .vl-slide__kicker{
+  background:transparent;
+  color:var(--vl-brand);
+  padding:0;
+  font-size:clamp(13px,1.5vw,17px);
+}
+
+/* ---------------- Variant: two-column ---------------- */
+.vl-slide--two{justify-content:center}
+
+/* ---------------- Variant: quote ---------------- */
+.vl-slide--quote{
+  justify-content:center;
+  gap:clamp(20px,3vw,34px);
+}
+.vl-slide__quote{
+  margin:0;
+  font-family:var(--vl-font-display);
+  font-weight:600;
+  font-size:clamp(28px,5vw,60px);
+  line-height:1.12;
+  letter-spacing:.005em;
+  color:var(--vl-text);
+  max-width:18ch;
+  text-wrap:balance;
+}
+.vl-slide__quote::before{
+  content:"";
+  display:block;
+  width:clamp(48px,6vw,84px);
+  height:6px;
+  background:var(--vl-brand);
+  border-radius:1px;
+  margin-bottom:clamp(18px,2.4vw,30px);
+}
+.vl-slide__cite{
+  display:block;
+  font-family:var(--vl-font-sans);
+  font-weight:600;
+  font-size:clamp(14px,1.6vw,18px);
+  letter-spacing:.02em;
+  color:var(--vl-text-muted);
+}
+.vl-slide__cite::before{content:"— "}
+.vl-slide--dark .vl-slide__quote,
+.vl-slide--section .vl-slide__quote{color:var(--vl-on-invert)}
+.vl-slide--dark .vl-slide__cite,
+.vl-slide--section .vl-slide__cite{color:var(--vl-on-invert); opacity:.7}
+
+/* ---------------- Variant: image (bg via inline style) ---------------- */
+.vl-slide--image{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  color:#fff;
+  border-bottom-color:transparent;
+}
+.vl-slide--image::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.30) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,.78) 100%);
+  z-index:0;
+}
+.vl-slide--image > *{position:relative; z-index:1}
+.vl-slide--image .vl-slide__title{color:#fff}
+.vl-slide--image .vl-slide__lead,
+.vl-slide--image .vl-slide__body,
+.vl-slide--image .vl-slide__list{color:#fff}
+.vl-slide--image .vl-slide__list strong{color:#fff}
+.vl-slide--image .vl-slide__footer{color:#fff; opacity:.78}
+
+/* ---------------- Variant: end slide ---------------- */
+.vl-slide--end{
+  align-items:center;
+  text-align:center;
+  justify-content:center;
+  background:var(--vl-surface-invert);
+  color:var(--vl-on-invert);
+  border-bottom-color:transparent;
+  gap:clamp(18px,3vw,28px);
+}
+.vl-slide--end .vl-slide__title{color:var(--vl-on-invert)}
+.vl-slide--end .vl-slide__lead,
+.vl-slide--end .vl-slide__body{color:var(--vl-on-invert); margin-left:auto; margin-right:auto}
+.vl-slide--end .vl-slide__kicker{align-self:center}
+.vl-slide--end .vl-slide__footer{color:var(--vl-on-invert); opacity:.62}
+
+/* ---------------- Figure inside a slide ---------------- */
+/* Keep an embedded .vl-figure / figure from overflowing the panel. */
+.vl-slide .vl-figure,
+.vl-slide figure{margin:0; width:100%; max-width:var(--vl-maxw)}
+.vl-slide__cols .vl-figure,
+.vl-slide__cols figure{max-width:none}
+.vl-slide svg{display:block; width:100%; height:auto; max-width:100%}
+
+/* ---------------- Progress bar (width set by slides.js) ---------------- */
+.vl-deck__progress{
+  position:fixed;
+  left:0;
+  bottom:0;
+  height:4px;
+  width:0;
+  background:var(--vl-brand);
+  z-index:60;
+  transition:width .25s ease;
+  pointer-events:none;
+}
+
+/* ---------------- Floating controls (e.g. theme toggle) ---------------- */
+.vl-deck__btn{
+  position:fixed;
+  top:clamp(14px,2vw,22px);
+  right:clamp(14px,2vw,22px);
+  z-index:70;
+  display:inline-flex;
+  align-items:center;
+  gap:.45em;
+  font-family:var(--vl-font-display);
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--vl-text);
+  background:var(--vl-surface-2);
+  border:1px solid var(--vl-border-strong);
+  border-radius:var(--vl-radius);
+  padding:.5em .8em;
+  cursor:pointer;
+  box-shadow:var(--vl-shadow-sm);
+}
+.vl-deck__btn:hover{background:var(--vl-surface-3)}
+
+/* ---------------- Responsive: collapse two-col on small screens ---------------- */
+@media (max-width:720px){
+  .vl-slide__cols{grid-template-columns:1fr; gap:clamp(18px,5vw,28px)}
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion:reduce){
+  .vl-deck{scroll-behavior:auto}
+  .vl-deck__progress{transition:none}
+}
+
+/* ---------------- Print: one clean slide per page ---------------- */
+@media print{
+  .vl-deck{height:auto; overflow:visible; background:#fff}
+  .vl-slide{
+    min-height:0;
+    height:100vh;
+    page-break-after:always;
+    break-after:page;
+    border:none;
+  }
+  .vl-slide:last-child{page-break-after:auto; break-after:auto}
+  .vl-deck__progress,
+  .vl-deck__btn{display:none}
+  .vl-slide--image::before{
+    background:rgba(0,0,0,.55);
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+}

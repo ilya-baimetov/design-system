@@ -1,0 +1,103 @@
+/* ============================================================
+   VibeLoom UI — Design Tokens
+   Crimson · cool greys · light + dark.  Namespace: --vl-*
+   Toggle dark with  <html data-theme="dark">  (see README for the
+   3-line init snippet that respects OS preference + localStorage).
+   This file is first in the bundle, so the font @import stays valid.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  /* ---- type ---- */
+  --vl-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --vl-font-display: "Oswald", "Arial Narrow", "Helvetica Neue Condensed", Impact, var(--vl-font-sans);
+  --vl-font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+
+  /* ---- brand: VibeLoom crimson ---- */
+  --vl-crimson:      #e84057;
+  --vl-crimson-deep: #c43a50;
+  --vl-crimson-soft: #fbe6ea;
+  --vl-brand:        var(--vl-crimson);        /* accents, bars, large text, graphics */
+  --vl-brand-strong: var(--vl-crimson-deep);   /* small white-on-red — meets AA */
+  --vl-brand-soft:   var(--vl-crimson-soft);   /* tinted backgrounds */
+  --vl-brand-text:   #9b1f38;                  /* crimson TEXT on light — meets AA */
+  --vl-on-brand:     #ffffff;
+
+  /* ---- neutrals: cool greys (matches vibeloom.ai) ---- */
+  --vl-surface:        #ffffff;
+  --vl-surface-2:      #f7f7f6;
+  --vl-surface-3:      #efeeec;
+  --vl-surface-invert: #0a0a0a;   /* strong dark panels: table heads, sidebar, bands, footer */
+  --vl-on-invert:      #f4f2ef;
+  --vl-text:           #0a0a0a;
+  --vl-text-2:         #2a2a2a;
+  --vl-text-muted:     #5a5a5a;
+  --vl-text-faint:     #707070;
+  --vl-border:         #e6e4e0;
+  --vl-border-strong:  #d6d3cd;
+
+  /* ---- effects ---- */
+  --vl-edge:      #5a5a5a;          /* diagram connectors */
+  --vl-radius:    3px;
+  --vl-radius-sm: 2px;
+  --vl-radius-lg: 6px;
+  --vl-shadow:    0 1px 2px rgba(10,10,10,.05), 0 6px 18px rgba(10,10,10,.08);
+  --vl-shadow-sm: 0 1px 2px rgba(10,10,10,.06);
+  --vl-ring:      0 0 0 3px rgba(232,64,87,.40);   /* focus-visible ring */
+
+  /* ---- spacing scale ---- */
+  --vl-space-1:4px;  --vl-space-2:8px;  --vl-space-3:12px; --vl-space-4:16px;
+  --vl-space-5:24px; --vl-space-6:32px; --vl-space-7:48px; --vl-space-8:64px;
+
+  /* ---- layout ---- */
+  --vl-maxw:       880px;
+  --vl-sidebar-w:  296px;
+
+  /* ---- diagram category palette (rendered on a light canvas in BOTH themes) ----
+     bg = light fill · ac = stroke / solid fill · tx = dark text on light fill   */
+  --vl-c1-bg:#fbe6ea; --vl-c1-ac:#c43a50; --vl-c1-tx:#7d1330;  /* crimson — agent / primary  */
+  --vl-c2-bg:#e8e6e2; --vl-c2-ac:#1a1a1a; --vl-c2-tx:#1a1a1a;  /* ink — data / model         */
+  --vl-c3-bg:#eceae6; --vl-c3-ac:#585858; --vl-c3-tx:#2e2e2e;  /* graphite — tools           */
+  --vl-c4-bg:#efede8; --vl-c4-ac:#6e6a62; --vl-c4-tx:#44413b;  /* stone — neutral / eval     */
+  --vl-c5-bg:#f7dde2; --vl-c5-ac:#9b2235; --vl-c5-tx:#5e1322;  /* deep red — risk / guardrail*/
+  --vl-c6-bg:#e4e2dd; --vl-c6-ac:#3a3a3a; --vl-c6-tx:#262626;  /* charcoal — orchestration   */
+  --vl-cs-bg:#edebe6; --vl-cs-ac:#6a6a6a; --vl-cs-tx:#2a2a2a;  /* slate — infra / neutral    */
+  --vl-cd-bg:#0a0a0a; --vl-cd-tx:#f4f2ef;                      /* dark node                  */
+
+  color-scheme: light;
+}
+
+/* ============================================================
+   DARK THEME  — <html data-theme="dark">
+   Diagrams stay on a light canvas (see components.css .vl-figure),
+   so the category palette above is intentionally NOT overridden.
+   ============================================================ */
+[data-theme="dark"]{
+  --vl-crimson:      #ff5468;   /* a touch brighter so it pops on dark */
+  --vl-crimson-deep: #c43a50;
+  --vl-crimson-soft: #2a1518;
+  --vl-brand:        var(--vl-crimson);
+  --vl-brand-strong: var(--vl-crimson-deep);
+  --vl-brand-soft:   var(--vl-crimson-soft);
+  --vl-brand-text:   #ff9aa6;
+  --vl-on-brand:     #ffffff;
+
+  --vl-surface:        #0d0d0d;
+  --vl-surface-2:      #161616;
+  --vl-surface-3:      #1f1f1f;
+  --vl-surface-invert: #242424;
+  --vl-on-invert:      #f4f2ef;
+  --vl-text:           #f4f2ef;
+  --vl-text-2:         #d4d2ce;
+  --vl-text-muted:     #a8a59f;
+  --vl-text-faint:     #87847d;
+  --vl-border:         #2a2a2a;
+  --vl-border-strong:  #3a3a3a;
+
+  --vl-edge:      #8a877f;
+  --vl-shadow:    0 1px 2px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.55);
+  --vl-shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+  --vl-ring:      0 0 0 3px rgba(255,84,104,.45);
+
+  color-scheme: dark;
+}

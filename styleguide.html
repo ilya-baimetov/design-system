@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VibeLoom UI — Style Guide · Living Reference</title>
+<link rel="stylesheet" href="theme.css">
+<script defer src="layout.js"></script>
+
+<!-- Inline theme init: set data-theme early in case layout.js loads late.
+     Mirrors layout.js (localStorage key "vl-theme" → OS preference). -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("vl-theme");
+      document.documentElement.dataset.theme = saved === "dark" ? "dark" : "light";
+    } catch (e) {
+      document.documentElement.dataset.theme = "light";
+    }
+  })();
+</script>
+
+<!-- Page-scoped helpers (this page only): swatch grid + a couple of layout aids -->
+<style>
+  .sg-toggle{
+    position:fixed; top:16px; right:16px; z-index:70;
+    display:inline-flex; align-items:center; gap:.45em;
+    font-family:var(--vl-font-display); font-weight:600;
+    font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--vl-text); background:var(--vl-surface-2);
+    border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius);
+    padding:.5em .8em; cursor:pointer; box-shadow:var(--vl-shadow-sm);
+  }
+  .sg-toggle:hover{background:var(--vl-surface-3)}
+
+  /* swatch grid */
+  .sg-swatches{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+    gap:var(--vl-space-3);
+    margin:var(--vl-space-4) 0;
+  }
+  .sg-swatch{
+    border:1px solid var(--vl-border);
+    border-radius:var(--vl-radius);
+    overflow:hidden;
+    background:var(--vl-surface);
+    box-shadow:var(--vl-shadow-sm);
+  }
+  .sg-swatch__chip{
+    height:64px;
+    border-bottom:1px solid var(--vl-border);
+    background-image:
+      linear-gradient(45deg,var(--vl-surface-3) 25%,transparent 25%),
+      linear-gradient(-45deg,var(--vl-surface-3) 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,var(--vl-surface-3) 75%),
+      linear-gradient(-45deg,transparent 75%,var(--vl-surface-3) 75%);
+    background-size:14px 14px;
+    background-position:0 0,0 7px,7px -7px,-7px 0;
+  }
+  .sg-swatch__chip > span{display:block; height:100%}
+  .sg-swatch__meta{padding:var(--vl-space-2) var(--vl-space-3)}
+  .sg-swatch__name{
+    font-family:var(--vl-font-mono); font-size:12px;
+    color:var(--vl-text-2); word-break:break-all; line-height:1.4;
+  }
+  .sg-swatch__role{
+    display:block; margin-top:2px;
+    font-size:11px; color:var(--vl-text-faint);
+  }
+  .sg-swatch--diagram .sg-swatch__name{color:var(--vl-brand-text)}
+
+  /* a row helper for buttons / pills demos */
+  .sg-row{display:flex; flex-wrap:wrap; gap:var(--vl-space-3); align-items:center; margin:var(--vl-space-3) 0}
+  .sg-label{
+    font-family:var(--vl-font-mono); font-size:12px; color:var(--vl-text-faint);
+    margin:var(--vl-space-4) 0 var(--vl-space-1);
+  }
+</style>
+</head>
+
+<body class="vl-page">
+
+<!-- Scroll progress (driven by layout.js) -->
+<div class="vl-progress"></div>
+
+<!-- Shared SVG defs: arrow markers used by inline diagrams -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="vl-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5a5a5a"></path>
+    </marker>
+    <marker id="vl-arrowB" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e84057"></path>
+    </marker>
+    <marker id="vl-arrowG" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"></path>
+    </marker>
+    <marker id="vl-dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="6" markerHeight="6">
+      <circle cx="3" cy="3" r="3" fill="#5a5a5a"></circle>
+    </marker>
+  </defs>
+</svg>
+
+<!-- Fixed theme toggle (top-right) -->
+<button class="sg-toggle" type="button" onclick="vlToggleTheme()" aria-label="Toggle light or dark theme">Theme</button>
+
+<div class="vl-container">
+
+  <!-- ============================ HERO ============================ -->
+  <header class="vl-hero">
+    <div class="vl-hero__top">
+      <div>
+        <span class="vl-hero__sub">VibeLoom UI · Living reference</span>
+        <h1 class="vl-hero__title">The <span class="vl-hero__hl">style guide</span></h1>
+        <p class="vl-hero__lede">
+          Every token and component in the VibeLoom UI design system, shown in one place.
+          Crimson, cool greys, light and dark. Flip the theme in the top-right corner to
+          confirm every surface adapts — and that diagrams and code stay legible islands in both.
+        </p>
+        <div class="vl-hero__meta">
+          <span><b>16</b>&nbsp;tokens shown</span>
+          <span><b>12</b>&nbsp;sections</span>
+          <span><b>2</b>&nbsp;themes</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================ 1 · COLOR TOKENS ============================ -->
+  <section class="vl-section" id="colors">
+    <h2>Color tokens</h2>
+    <div class="vl-prose">
+      <p class="vl-lead">
+        Every colour is a <code>--vl-*</code> custom property. The neutrals and brand
+        values flip between light and dark; the diagram palette (<code>c1</code>–<code>c6</code>,
+        <code>cs</code>) is intentionally theme-independent so SVG figures stay readable on a light canvas.
+      </p>
+    </div>
+
+    <p class="sg-label">Brand &amp; neutrals (flip with theme)</p>
+    <div class="sg-swatches">
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-brand)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-brand</span><span class="sg-swatch__role">accents, bars, graphics</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-brand-strong)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-brand-strong</span><span class="sg-swatch__role">white-on-red, AA</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-brand-soft)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-brand-soft</span><span class="sg-swatch__role">tinted backgrounds</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-surface)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-surface</span><span class="sg-swatch__role">page background</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-surface-2)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-surface-2</span><span class="sg-swatch__role">subtle panels</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-surface-3)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-surface-3</span><span class="sg-swatch__role">deeper panels, kbd</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-surface-invert)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-surface-invert</span><span class="sg-swatch__role">bands, table heads</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-text)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-text</span><span class="sg-swatch__role">body text</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-text-muted)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-text-muted</span><span class="sg-swatch__role">secondary text</span></div></div>
+      <div class="sg-swatch"><div class="sg-swatch__chip"><span style="background:var(--vl-border)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-border</span><span class="sg-swatch__role">hairlines, dividers</span></div></div>
+    </div>
+
+    <p class="sg-label">Diagram palette (theme-independent — fill backgrounds)</p>
+    <div class="sg-swatches">
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c1-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c1-bg</span><span class="sg-swatch__role">crimson · agent</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c2-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c2-bg</span><span class="sg-swatch__role">ink · data / model</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c3-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c3-bg</span><span class="sg-swatch__role">graphite · tools</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c4-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c4-bg</span><span class="sg-swatch__role">stone · eval</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c5-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c5-bg</span><span class="sg-swatch__role">deep red · guardrail</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c6-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c6-bg</span><span class="sg-swatch__role">charcoal · orchestration</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-cs-bg)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-cs-bg</span><span class="sg-swatch__role">slate · infra</span></div></div>
+    </div>
+
+    <p class="sg-label">Diagram palette — accent / solid strokes</p>
+    <div class="sg-swatches">
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c1-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c1-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c2-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c2-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c3-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c3-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c4-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c4-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c5-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c5-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-c6-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-c6-ac</span></div></div>
+      <div class="sg-swatch sg-swatch--diagram"><div class="sg-swatch__chip"><span style="background:var(--vl-cs-ac)"></span></div><div class="sg-swatch__meta"><span class="sg-swatch__name">--vl-cs-ac</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============================ 2 · TYPOGRAPHY ============================ -->
+  <section class="vl-section" id="typography">
+    <h2>Typography</h2>
+    <div class="vl-prose">
+      <p class="vl-lead">Display headings in <strong>Oswald</strong>, body in <strong>Inter</strong>, code in <strong>JetBrains Mono</strong>. Everything below is real <code>.vl-prose</code> output.</p>
+
+      <h1>Heading level one</h1>
+      <h2>Heading level two</h2>
+      <h3>Heading level three</h3>
+      <h4>Heading level four</h4>
+      <h5>Heading level five</h5>
+      <h6>Heading level six</h6>
+
+      <p>A standard paragraph of body copy. The quick brown fox jumps over the lazy dog, then files a
+        well-scoped pull request. Inline elements include a <a href="#typography">text link</a>,
+        some <strong>bold emphasis</strong>, a little <em>italic nuance</em>, an inline
+        <code>code</code> token, and a keyboard hint like <span class="vl-kbd">Cmd</span>
+        <span class="vl-kbd">K</span>.</p>
+
+      <p class="vl-lead">A <code>.vl-lead</code> paragraph carries the section's opening thought at a larger, muted size.</p>
+
+      <blockquote>
+        <p>Constraints aren't the enemy of good design — they're the brief. A system that flips
+          cleanly between light and dark was never an accident.</p>
+      </blockquote>
+
+      <h4>Ordered list</h4>
+      <ol>
+        <li>Define the tokens first — they are the contract.</li>
+        <li>Build components that consume only tokens.</li>
+        <li>Let the theme switch do the rest.</li>
+      </ol>
+
+      <h4>Unordered list</h4>
+      <ul>
+        <li>Crimson accent, cool-grey neutrals.</li>
+        <li>Diagrams and code render as fixed light/dark islands.</li>
+        <li>Focus rings, selection colour, and markers all token-driven.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ 3 · BUTTONS ============================ -->
+  <section class="vl-section" id="buttons">
+    <h2>Buttons</h2>
+    <div class="vl-prose">
+      <p>Base <code>.vl-btn</code> plus variants <code>--solid</code>, <code>--ghost</code>,
+        <code>--ink</code>, and the default neutral. Sizes: <code>--sm</code>, default, <code>--lg</code>.</p>
+    </div>
+
+    <p class="sg-label">Variants</p>
+    <div class="sg-row">
+      <button class="vl-btn vl-btn--solid" type="button">Solid</button>
+      <button class="vl-btn vl-btn--ghost" type="button">Ghost</button>
+      <button class="vl-btn vl-btn--ink" type="button">Ink</button>
+      <button class="vl-btn" type="button">Default</button>
+      <button class="vl-btn vl-btn--solid" type="button" disabled>Disabled</button>
+    </div>
+
+    <p class="sg-label">Sizes</p>
+    <div class="sg-row">
+      <button class="vl-btn vl-btn--solid vl-btn--sm" type="button">Small</button>
+      <button class="vl-btn vl-btn--solid" type="button">Default</button>
+      <button class="vl-btn vl-btn--solid vl-btn--lg" type="button">Large</button>
+    </div>
+  </section>
+
+  <!-- ============================ 4 · LABELS ============================ -->
+  <section class="vl-section" id="labels">
+    <h2>Labels</h2>
+    <div class="vl-prose">
+      <p>Small all-caps display labels. <code>.vl-kicker</code> sits on the brand colour;
+        <code>.vl-eyebrow</code> sits on ink and accepts an inline <code>&lt;b&gt;</code> highlight.</p>
+    </div>
+    <div class="sg-row">
+      <span class="vl-kicker">Kicker</span>
+      <span class="vl-eyebrow">Eyebrow</span>
+      <span class="vl-eyebrow">Part <b>02</b></span>
+    </div>
+  </section>
+
+  <!-- ============================ 5 · CALLOUTS ============================ -->
+  <section class="vl-section" id="callouts">
+    <h2>Callouts</h2>
+    <div class="vl-prose">
+      <p>Five theme-aware variants, each with a <code>__head</code> (icon + label) and a body.</p>
+    </div>
+
+    <div class="vl-callout vl-callout--take">
+      <div class="vl-callout__head"><span class="vl-callout__icon">!</span>Takeaway</div>
+      <div class="vl-callout__body"><p>The editorial takeaway — your single most important sentence, painted in the brand tint.</p></div>
+    </div>
+
+    <div class="vl-callout vl-callout--pitfall">
+      <div class="vl-callout__head"><span class="vl-callout__icon">&#9888;</span>Pitfall</div>
+      <div class="vl-callout__body"><p>A common gotcha to avoid: shipping an agent with commit access but no sandbox.</p></div>
+    </div>
+
+    <div class="vl-callout vl-callout--key">
+      <div class="vl-callout__head"><span class="vl-callout__icon">&#9733;</span>Key idea</div>
+      <div class="vl-callout__body"><p>Tokens are the contract; components consume them and never hard-code a colour.</p></div>
+    </div>
+
+    <div class="vl-callout vl-callout--def">
+      <div class="vl-callout__head"><span class="vl-callout__icon">&#167;</span>Definition</div>
+      <div class="vl-callout__body"><p><strong>Light island</strong> — a figure that keeps a light canvas in both themes so diagrams stay legible.</p></div>
+    </div>
+
+    <div class="vl-callout vl-callout--note">
+      <div class="vl-callout__head"><span class="vl-callout__icon">i</span>Note</div>
+      <div class="vl-callout__body"><p>An aside for context that's helpful but non-essential to the main thread.</p></div>
+    </div>
+  </section>
+
+  <!-- ============================ 6 · TABLES ============================ -->
+  <section class="vl-section" id="tables">
+    <h2>Tables</h2>
+    <div class="vl-prose">
+      <p>Wrap a <code>table.vl-table</code> in <code>.vl-table-wrap</code> for the border, shadow,
+        and horizontal scroll. Cell helpers: <code>.vl-yes</code>, <code>.vl-no</code>,
+        <code>.vl-maybe</code>, <code>.vl-num</code>, plus pills inside cells.</p>
+    </div>
+
+    <div class="vl-table-wrap">
+      <table class="vl-table">
+        <thead>
+          <tr>
+            <th scope="col">Pattern</th>
+            <th scope="col">Sandboxed</th>
+            <th scope="col">Human gate</th>
+            <th scope="col" class="vl-num">p95 ms</th>
+            <th scope="col">Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Read-only assistant</td>
+            <td class="vl-yes">Yes</td>
+            <td class="vl-no">No</td>
+            <td class="vl-num">120</td>
+            <td><span class="vl-pill vl-pill--1">Agent</span></td>
+          </tr>
+          <tr>
+            <td>Tool-using agent</td>
+            <td class="vl-yes">Yes</td>
+            <td class="vl-maybe">Maybe</td>
+            <td class="vl-num">640</td>
+            <td><span class="vl-pill vl-pill--3">Tools</span></td>
+          </tr>
+          <tr>
+            <td>Autonomous SRE</td>
+            <td class="vl-yes">Yes</td>
+            <td class="vl-yes">Yes</td>
+            <td class="vl-num">2,310</td>
+            <td><span class="vl-pill vl-pill--5">Guardrail</span></td>
+          </tr>
+          <tr>
+            <td>Unbounded writer</td>
+            <td class="vl-no">No</td>
+            <td class="vl-no">No</td>
+            <td class="vl-num">95</td>
+            <td><span class="vl-pill vl-pill--ink">Avoid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================ 7 · CARDS ============================ -->
+  <section class="vl-section" id="cards">
+    <h2>Cards</h2>
+    <div class="vl-prose">
+      <p>Surface containers with a <code>__title</code> and <code>__body</code>. Use
+        <code>.vl-card--soft</code> for the muted variant. Laid out here in <code>.vl-cols-3</code>.</p>
+    </div>
+
+    <div class="vl-cols-3">
+      <div class="vl-card">
+        <h3 class="vl-card__title">Model</h3>
+        <div class="vl-card__body"><p>The reasoning engine that plans and decides each step of the loop.</p></div>
+      </div>
+      <div class="vl-card vl-card--soft">
+        <h3 class="vl-card__title">Tools</h3>
+        <div class="vl-card__body"><p>The hands the agent acts with — bounded, audited, and reversible where possible.</p></div>
+      </div>
+      <div class="vl-card">
+        <h3 class="vl-card__title">Guardrails</h3>
+        <div class="vl-card__body"><p>The safety shell: sandboxes, gates, and the observability that proves it works.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ 8 · PILLS ============================ -->
+  <section class="vl-section" id="pills">
+    <h2>Pills</h2>
+    <div class="vl-prose">
+      <p>Compact category tags. Numbered variants map to the diagram palette; <code>--brand</code>
+        and <code>--ink</code> are the emphatic pair. The default <code>.vl-pill</code> is neutral.</p>
+    </div>
+    <div class="vl-tags">
+      <span class="vl-pill">Default</span>
+      <span class="vl-pill vl-pill--1">Agent</span>
+      <span class="vl-pill vl-pill--2">Model</span>
+      <span class="vl-pill vl-pill--3">Tools</span>
+      <span class="vl-pill vl-pill--4">Eval</span>
+      <span class="vl-pill vl-pill--5">Guardrail</span>
+      <span class="vl-pill vl-pill--6">Orchestration</span>
+      <span class="vl-pill vl-pill--s">Infra</span>
+      <span class="vl-pill vl-pill--brand">Brand</span>
+      <span class="vl-pill vl-pill--ink">Ink</span>
+    </div>
+  </section>
+
+  <!-- ============================ 9 · CODE ============================ -->
+  <section class="vl-section" id="code">
+    <h2>Code</h2>
+    <div class="vl-prose">
+      <p>A <code>.vl-code</code> block is a dark island in both themes. Syntax is hand-tagged with
+        <code>.vl-kw</code>, <code>.vl-st</code>, <code>.vl-fn</code>, <code>.vl-nm</code>,
+        <code>.vl-nu</code>, and <code>.vl-cm</code>.</p>
+    </div>
+
+    <pre class="vl-code"><code><span class="vl-cm"># bound the agent before you trust it</span>
+<span class="vl-kw">from</span> vibeloom <span class="vl-kw">import</span> <span class="vl-nm">Agent</span>, <span class="vl-nm">Sandbox</span>
+
+<span class="vl-nm">agent</span> = <span class="vl-fn">Agent</span>(
+    model=<span class="vl-st">"claude-opus"</span>,
+    max_steps=<span class="vl-nu">8</span>,
+    sandbox=<span class="vl-fn">Sandbox</span>(network=<span class="vl-kw">False</span>),
+)
+
+<span class="vl-kw">def</span> <span class="vl-fn">run</span>(task):
+    <span class="vl-kw">return</span> <span class="vl-nm">agent</span>.<span class="vl-fn">solve</span>(task, retries=<span class="vl-nu">2</span>)</code></pre>
+  </section>
+
+  <!-- ============================ 10 · FIGURE + DIAGRAM ============================ -->
+  <section class="vl-section" id="figure">
+    <h2>Figure + diagram</h2>
+    <div class="vl-prose">
+      <p>A <code>.vl-figure</code> is a light island in both themes. It carries a <code>__head</code>
+        (title + <code>__num</code>), an inline SVG built from diagram primitives
+        (<code>.fill-*</code>, <code>.solid-*</code>, <code>.stroke-*</code>, <code>.edge</code>,
+        <code>.edge-strong</code>, <code>.dg-t</code>, <code>.dg-ink</code>, <code>.dg-center</code>),
+        and a <code>figcaption</code>. Toggle the theme — the figure stays put.</p>
+    </div>
+
+    <figure class="vl-figure">
+      <div class="vl-figure__head">
+        <span class="vl-figure__num">F1</span>
+        <span class="vl-figure__title">The agent control loop</span>
+      </div>
+      <div class="vl-figure__body">
+        <svg viewBox="0 0 760 250" role="img" aria-label="An agent loop: the model plans, calls a tool, the runtime executes, and observations feed back to the model.">
+          <!-- Model node (crimson / c1) -->
+          <rect class="box fill-1 stroke-1" x="36" y="92" width="178" height="66" rx="8"/>
+          <text class="dg-t dg-b txt-1 dg-center" x="125" y="120">Model</text>
+          <text class="dg-t-sm txt-1 dg-center" x="125" y="140">plans &amp; decides</text>
+
+          <!-- Tool node (graphite / c3) -->
+          <rect class="box fill-3 stroke-3" x="300" y="92" width="160" height="66" rx="8"/>
+          <text class="dg-t dg-b txt-3 dg-center" x="380" y="120">Tool call</text>
+          <text class="dg-t-sm txt-3 dg-center" x="380" y="140">bounded action</text>
+
+          <!-- Runtime node (ink / c2) -->
+          <rect class="box fill-2 stroke-2" x="546" y="92" width="178" height="66" rx="8"/>
+          <text class="dg-t dg-b txt-2 dg-center" x="635" y="120">Runtime</text>
+          <text class="dg-t-sm txt-2 dg-center" x="635" y="140">action executes</text>
+
+          <!-- Forward edges (crimson) -->
+          <path class="edge edge-strong" d="M214 125 L296 125"/>
+          <path class="edge edge-strong" d="M460 125 L542 125"/>
+
+          <!-- Return / observe edge (neutral, dashed) -->
+          <path class="edge edge-d" d="M635 158 C 635 214 125 214 125 162"/>
+          <text class="dg-t-sm dg-muted dg-center" x="380" y="208">observe &amp; re-plan</text>
+
+          <!-- A solid accent dot to anchor the loop -->
+          <circle class="solid-1" cx="125" cy="78" r="4"/>
+          <text class="dg-t-xs dg-ink dg-center" x="125" y="64">start</text>
+        </svg>
+      </div>
+      <figcaption>Every action produces an observation that feeds the next decision — the figure keeps a light canvas in dark mode.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ 11 · BAND ============================ -->
+  <section class="vl-section" id="band">
+    <h2>Band</h2>
+    <div class="vl-prose">
+      <p>A numbered section banner: <code>.vl-band</code> with a <code>__num</code> chip and a
+        <code>__title</code>. Always reads on the inverted surface.</p>
+    </div>
+    <div class="vl-band">
+      <div class="vl-band__num">II</div>
+      <div class="vl-band__title">From demo to dependable</div>
+    </div>
+  </section>
+
+  <!-- ============================ 12 · SLIDES ============================ -->
+  <section class="vl-section" id="slides">
+    <h2>Slides</h2>
+    <div class="vl-prose">
+      <p>The system ships a dependency-free, scroll-snapping presentation deck
+        (<code>slides.css</code> + <code>slides.js</code>) with title, section, two-column, quote,
+        image, and end slide variants — plus keyboard navigation and its own theme toggle.</p>
+      <p><a class="vl-btn vl-btn--solid" href="slides-demo.html">Open the example deck &rarr;</a></p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Scroll-to-top (driven by layout.js) -->
+<button class="vl-scrolltop" type="button" aria-label="Scroll to top">&#8593;</button>
+
+</body>
+</html>
