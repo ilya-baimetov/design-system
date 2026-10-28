@@ -1,7 +1,7 @@
 /* ============================================================
    VibeLoom UI — slides.js
    Dependency-free deck controller: theme init/toggle, keyboard
-   navigation, progress bar, and live "n / total" page numbers.
+   navigation, progress bar, and per-slide "n / total" page numbers.
    Defensive: every lookup is guarded so it never throws if a
    deck (or element) is absent on the page.
    ============================================================ */
@@ -30,8 +30,12 @@
     var slides = Array.prototype.slice.call(deck.querySelectorAll(".vl-slide"));
     if (!slides.length) return;
     var progress = document.querySelector(".vl-deck__progress");
-    var nums = Array.prototype.slice.call(deck.querySelectorAll(".vl-slide__num"));
     var total = slides.length;
+    /* Each slide's footer shows its own number, so print/PDF pages are right too. */
+    slides.forEach(function (s, idx) {
+      var own = s.querySelectorAll(".vl-slide__num");
+      for (var n = 0; n < own.length; n++) own[n].textContent = (idx + 1) + " / " + total;
+    });
     var current = 0;
 
     function go(i) {
@@ -41,7 +45,6 @@
     function render(i) {
       current = i;
       if (progress) progress.style.width = ((i + 1) / total * 100) + "%";
-      for (var n = 0; n < nums.length; n++) nums[n].textContent = (i + 1) + " / " + total;
     }
     render(0);
 
