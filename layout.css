@@ -201,9 +201,10 @@
   margin:0 0 var(--vl-space-4);
 }
 .vl-hero__hl{
-  background:var(--vl-brand);
+  /* a band hugging the caps, so a highlight on line 2 never covers line 1 */
+  background:linear-gradient(var(--vl-brand),var(--vl-brand)) 0 60% / 100% 1.06em no-repeat;
   color:#fff;
-  padding:.12em .18em;
+  padding:0 .18em;
   -webkit-box-decoration-break:clone;
   box-decoration-break:clone;
 }
