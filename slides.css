@@ -68,11 +68,13 @@
   text-wrap:balance;
 }
 
-/* Inline crimson highlight inside a title or lead */
+/* Inline crimson highlight inside a title or lead.
+   Painted as a band hugging the caps (not the font's tall content box), so a
+   highlight on line 2 never covers line 1 or the elements above and below. */
 .vl-slide__hl{
-  background:var(--vl-brand);
+  background:linear-gradient(var(--vl-brand),var(--vl-brand)) 0 60% / 100% 1.06em no-repeat;
   color:#fff;
-  padding:.1em .18em;
+  padding:0 .18em;
   border-radius:var(--vl-radius-sm);
   box-decoration-break:clone;
   -webkit-box-decoration-break:clone;
@@ -387,12 +389,6 @@
 .vl-slide--dark .vl-slide__source b,.vl-slide--section .vl-slide__source b,
 .vl-slide--end .vl-slide__source b,.vl-slide--image .vl-slide__source b{color:inherit}
 
-/* ---------------- Highlight clearance ----------------
-   .vl-slide__hl paints Oswald's tall content box, which extends ~.3em
-   beyond a 1.02 line box; give such titles room so the crimson block
-   never overlaps the kicker above or the visual below. */
-.vl-slide__title:has(.vl-slide__hl){margin-block:.2em}
-
 /* ---------------- Read-alone note (hidden on screen) ----------------
    Printed beneath its slide when the deck carries .vl-deck--handout. */
 .vl-slide__notes{display:none}
@@ -427,6 +423,10 @@
 @page vl-handout{size:1440px 1080px; margin:0}
 @media print{
   .vl-deck{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  /* start the document on the same named page, or Chromium may emit a blank
+     default-size first page before slide 1 */
+  html:has(.vl-deck),body:has(.vl-deck),.vl-deck{page:vl-slide}
+  html:has(.vl-deck--handout),body:has(.vl-deck--handout),.vl-deck--handout{page:vl-handout}
   .vl-deck .vl-slide{page:vl-slide; height:900px}
   .vl-deck--handout .vl-slide{
     --vl-notes-h:180px;

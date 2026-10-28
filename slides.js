@@ -62,6 +62,20 @@
       }, { passive: true });
     }
 
+    /* Print / PDF: a scrolled deck prints offset pages in Chromium, so print from
+       the top and restore the reader's place afterwards. */
+    var saved = null;
+    function toTop() { if (saved === null) { saved = deck.scrollTop; deck.style.scrollBehavior = "auto"; deck.scrollTop = 0; } }
+    function restore() { if (saved !== null) { deck.scrollTop = saved; deck.style.scrollBehavior = ""; saved = null; } }
+    window.addEventListener("beforeprint", toTop);
+    window.addEventListener("afterprint", restore);
+    if (window.matchMedia) {
+      var mq = window.matchMedia("print");
+      var onChange = function (m) { if (m.matches) toTop(); else restore(); };
+      if (mq.addEventListener) mq.addEventListener("change", onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+
     document.addEventListener("keydown", function (e) {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       var k = e.key;
