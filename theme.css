@@ -606,6 +606,17 @@ sup.vl-cite a:hover{text-decoration:underline}
 /* --- course migration additions --- */
 .vl-code-label{font-family:var(--vl-font-display);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--vl-text-faint);font-weight:600;margin:18px 0 -10px}
 
+/* ---- dated / perishable fact marker (decay isolation) ----
+   Wrap fast-drifting numbers (prices, benchmarks, model claims) in
+   <span class="vl-asof" title="As of Jun 2026 — verify before reuse">…</span>.
+   Refresh workflow: grep vl-asof to find every perishable claim. */
+.vl-asof{border-bottom:1px dotted var(--vl-text-faint); cursor:help}
+
+/* ---- native disclosure styling (used by exercises/hints) ---- */
+.vl-prose details{margin:10px 0 4px; font-size:14.5px}
+.vl-prose summary{cursor:pointer; font-weight:600; color:var(--vl-brand-text); margin-bottom:6px}
+.vl-prose details[open] summary{margin-bottom:8px}
+
 
 /* ===================== layout.css ===================== */
 /* ============================================================
