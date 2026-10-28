@@ -71,7 +71,9 @@
    DARK THEME  — <html data-theme="dark">
    Diagrams stay on a light canvas (see components.css .vl-figure),
    so the category palette above is intentionally NOT overridden.
+   Wrapped in "not print": printing always uses the light theme.
    ============================================================ */
+@media not print{
 [data-theme="dark"]{
   --vl-crimson:      #ff5468;   /* a touch brighter so it pops on dark */
   --vl-crimson-deep: #c43a50;
@@ -100,4 +102,24 @@
   --vl-ring:      0 0 0 3px rgba(255,84,104,.45);
 
   color-scheme: dark;
+}
+}  /* end @media not print */
+
+/* ============================================================
+   LIGHT ISLANDS — figures and charts keep the light palette in
+   BOTH themes, so theme-aware content placed inside them (cards,
+   steps, stats, tables) stays legible in dark mode.
+   Mirrors the light colour tokens in :root — keep the two in sync.
+   ============================================================ */
+[data-theme="dark"] :is(.vl-figure,.vl-chart,.vl-stackbar,.vl-quad){
+  --vl-crimson:#e84057; --vl-crimson-deep:#c43a50; --vl-crimson-soft:#fbe6ea;
+  --vl-brand:var(--vl-crimson); --vl-brand-strong:var(--vl-crimson-deep);
+  --vl-brand-soft:var(--vl-crimson-soft); --vl-brand-text:#9b1f38; --vl-on-brand:#ffffff;
+  --vl-surface:#ffffff; --vl-surface-2:#f7f7f6; --vl-surface-3:#efeeec;
+  --vl-surface-invert:#0a0a0a; --vl-on-invert:#f4f2ef;
+  --vl-text:#0a0a0a; --vl-text-2:#2a2a2a; --vl-text-muted:#5a5a5a; --vl-text-faint:#707070;
+  --vl-border:#e6e4e0; --vl-border-strong:#d6d3cd; --vl-edge:#5a5a5a;
+  --vl-shadow:0 1px 2px rgba(10,10,10,.05), 0 6px 18px rgba(10,10,10,.08);
+  --vl-shadow-sm:0 1px 2px rgba(10,10,10,.06);
+  color-scheme:light;
 }

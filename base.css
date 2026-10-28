@@ -88,3 +88,10 @@ a:hover{text-decoration:underline}
 
 /* --- course migration additions --- */
 .vl-prose h2,.vl-prose h3{scroll-margin-top:24px}
+
+/* ---------- Print: keep fills (table heads, bars, chips) ----------
+   Components rely on backgrounds; without this, white-on-dark
+   heads print as white-on-white when "background graphics" is off. */
+@media print{
+  .vl-page{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}

@@ -120,7 +120,7 @@
         </p>
         <div class="vl-hero__meta">
           <span><b>16</b>&nbsp;tokens shown</span>
-          <span><b>12</b>&nbsp;sections</span>
+          <span><b>18</b>&nbsp;sections</span>
           <span><b>2</b>&nbsp;themes</span>
         </div>
       </div>
@@ -458,6 +458,260 @@
       </div>
       <figcaption>Every action produces an observation that feeds the next decision — the figure keeps a light canvas in dark mode.</figcaption>
     </figure>
+  </section>
+
+  <!-- ============================ 10b · MARKS + CHARTS (2026-10) ============================ -->
+  <section class="vl-section" id="charts">
+    <h2>Marks + charts</h2>
+    <div class="vl-prose">
+      <p>A <code>.vl-chart</code> is a horizontal chart drawn to scale from zero by its data: set
+        <code>--max</code> on the chart and <code>--v</code> on each mark. Add <code>--from</code> to draw a
+        from&rarr;to step (waterfalls, ranges). Rows are <code>__label</code> | <code>__track</code>; marks are
+        <code>__bar</code>, <code>__dot</code> and <code>__val</code>; <code>--y</code> stacks two marks in one row.
+        Modifiers: <code>--grid</code> (gridlines every <code>--tick</code>), <code>--ref</code>/<code>--ref2</code>
+        (dashed lines at <code>--ref</code>/<code>--ref2</code>), <code>--band</code> (shaded <code>--b0</code>&ndash;<code>--b1</code>).
+        Charts are light islands: put them in a <code>.vl-figure</code>.</p>
+      <p>Fills come from one mark vocabulary used by every chart-like component:
+        <code>.vl-mark--1…6</code>/<code>--s</code> (solid tokens), <code>--hl</code> (crimson: the subject),
+        <code>--ink</code>, <code>--soft</code> (light fill: costs, a second series), <code>--target</code>
+        (hollow, dashed: a target, never a result), <code>--upside</code> (hatched: not in the base case), and the shapes
+        <code>--sq</code>/<code>--dia</code>.</p>
+    </div>
+
+    <figure class="vl-figure">
+      <div class="vl-figure__head"><span class="vl-figure__num">F2</span><span class="vl-figure__title">Bars with a reference line and a second series</span></div>
+      <div class="vl-figure__body">
+        <div class="vl-chart vl-chart--grid vl-chart--ref" style="--max:30;--tick:5;--ref:5;--vl-chart-row:40px;--vl-chart-bar:13px" role="img" aria-label="Median error by service in two conditions, against a 5% target line.">
+          <div class="vl-chart__head"><span class="vl-chart__reflabel">Target 5% <abbr class="vl-q vl-q--t" title="Target">T</abbr></span></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Service A<span class="vl-chart__sub">region 1</span></div><div class="vl-chart__track"><span class="vl-chart__bar" style="--v:12.1;--y:32%"></span><span class="vl-chart__val" style="--v:12.1;--y:32%">12.1</span><span class="vl-chart__bar vl-mark--soft" style="--v:1.9;--y:70%"></span><span class="vl-chart__val" style="--v:1.9;--y:70%">1.9</span></div></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Service B<span class="vl-chart__sub">region 2</span></div><div class="vl-chart__track"><span class="vl-chart__bar" style="--v:17.2;--y:32%"></span><span class="vl-chart__val" style="--v:17.2;--y:32%">17.2</span><span class="vl-chart__bar vl-mark--soft" style="--v:6.0;--y:70%"></span><span class="vl-chart__val" style="--v:6.0;--y:70%">6.0</span></div></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Service C<span class="vl-chart__sub">region 3</span></div><div class="vl-chart__track"><span class="vl-chart__bar" style="--v:25.5;--y:32%"></span><span class="vl-chart__val" style="--v:25.5;--y:32%">25.5</span><span class="vl-chart__bar vl-mark--soft" style="--v:4.3;--y:70%"></span><span class="vl-chart__val" style="--v:4.3;--y:70%">4.3</span></div></div>
+          <div class="vl-chart__axis"><span class="vl-chart__tick" style="--v:0">0</span><span class="vl-chart__tick" style="--v:10">10</span><span class="vl-chart__tick" style="--v:20">20</span><span class="vl-chart__tick" style="--v:30">30</span></div>
+          <div class="vl-chart__unit">median error (%)</div>
+          <div class="vl-legend"><span class="vl-legend__key"><i class="vl-legend__swatch"></i>Peak load</span><span class="vl-legend__key"><i class="vl-legend__swatch vl-mark--soft"></i>Steady load</span></div>
+        </div>
+      </div>
+      <figcaption>Geometry comes from the data: <code>width = 100% × --v / --max</code>. No bar can start anywhere but zero unless it carries <code>--from</code>.</figcaption>
+    </figure>
+
+    <div class="vl-cols">
+      <figure class="vl-figure">
+        <div class="vl-figure__head"><span class="vl-figure__num">F3</span><span class="vl-figure__title">Waterfall: from&rarr;to steps</span></div>
+        <div class="vl-figure__body">
+          <div class="vl-chart" style="--max:150;--vl-chart-label:7em" role="img" aria-label="Price 120 minus costs 30 and 40 leaves 50; plus an upside of 5 to 11.">
+            <div class="vl-chart__row"><div class="vl-chart__label">Price</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--ink" style="--v:120"></span><span class="vl-chart__val" style="--v:120">120</span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Cost 1</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--soft" style="--from:120;--v:90"></span><span class="vl-chart__val" style="--from:120;--v:90">&minus;30</span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Cost 2</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--soft" style="--from:90;--v:50"></span><span class="vl-chart__val" style="--from:90;--v:50">&minus;40</span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Margin</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--hl" style="--v:50"></span><span class="vl-chart__val" style="--v:50">50</span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Upside</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--upside" style="--from:55;--v:61"></span><span class="vl-chart__val" style="--from:55;--v:61">+5&ndash;11</span></div></div>
+            <div class="vl-chart__axis"><span class="vl-chart__tick" style="--v:0">0</span><span class="vl-chart__tick" style="--v:50">50</span><span class="vl-chart__tick" style="--v:100">100</span><span class="vl-chart__tick" style="--v:150">150</span></div>
+          </div>
+        </div>
+        <figcaption>Ink totals, soft costs, crimson result, hatched upside.</figcaption>
+      </figure>
+      <figure class="vl-figure">
+        <div class="vl-figure__head"><span class="vl-figure__num">F4</span><span class="vl-figure__title">Dot plot by segment</span></div>
+        <div class="vl-figure__body">
+          <div class="vl-chart vl-chart--grid vl-chart--ref" style="--max:12;--tick:2;--ref:5;--vl-chart-label:6.5em" role="img" aria-label="Two channels per segment against a 5% line.">
+            <div class="vl-chart__head"><span class="vl-chart__reflabel">5% line</span></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Rest</div><div class="vl-chart__track"><span class="vl-chart__dot vl-mark--hl" style="--v:1.2"></span><span class="vl-chart__dot vl-mark--ink vl-mark--sq" style="--v:1.8"></span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Jumps</div><div class="vl-chart__track"><span class="vl-chart__dot vl-mark--hl" style="--v:4.1"></span><span class="vl-chart__dot vl-mark--ink vl-mark--sq" style="--v:7.4"></span></div></div>
+            <div class="vl-chart__row"><div class="vl-chart__label">Impacts</div><div class="vl-chart__track"><span class="vl-chart__dot vl-mark--hl" style="--v:6.3"></span><span class="vl-chart__dot vl-mark--ink vl-mark--sq" style="--v:9.6"></span></div></div>
+            <div class="vl-chart__axis"><span class="vl-chart__tick" style="--v:0">0</span><span class="vl-chart__tick" style="--v:4">4</span><span class="vl-chart__tick" style="--v:8">8</span><span class="vl-chart__tick" style="--v:12">12</span></div>
+            <div class="vl-legend"><span class="vl-legend__key"><i class="vl-legend__swatch vl-mark--hl"></i>Channel 1</span><span class="vl-legend__key"><i class="vl-legend__swatch vl-mark--ink vl-mark--sq"></i>Channel 2</span></div>
+          </div>
+        </div>
+        <figcaption>Series differ by shape as well as tone, so they survive greyscale and colour-vision deficiency.</figcaption>
+      </figure>
+    </div>
+
+    <figure class="vl-figure">
+      <div class="vl-figure__head"><span class="vl-figure__num">F5</span><span class="vl-figure__title">Range bars over a reference band</span></div>
+      <div class="vl-figure__body">
+        <div class="vl-chart vl-chart--band vl-chart--ref2" style="--max:10;--b0:1;--b1:2.5;--ref2:8.7" role="img" aria-label="Three ranges against a shaded band from 1 to 2.5 and a reference at 8.7.">
+          <div class="vl-chart__head"><span class="vl-chart__reflabel vl-chart__reflabel--2">Base 8.7M</span></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Estimate A</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--3" style="--from:1;--v:2.5"></span><span class="vl-chart__val" style="--from:1;--v:2.5">1&ndash;2.5M <abbr class="vl-q" title="Estimate">E</abbr></span></div></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Estimate B</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--target" style="--from:0.02;--v:0.125"></span><span class="vl-chart__val" style="--from:0.02;--v:0.125">20&ndash;125k <abbr class="vl-q vl-q--h" title="Hypothesis">H</abbr></span></div></div>
+          <div class="vl-chart__row"><div class="vl-chart__label">Stock</div><div class="vl-chart__track"><span class="vl-chart__bar vl-mark--ink" style="--v:3.4"></span><span class="vl-chart__val" style="--v:3.4">3.4M</span></div></div>
+          <div class="vl-chart__axis"><span class="vl-chart__tick" style="--v:0">0</span><span class="vl-chart__tick" style="--v:5">5M</span><span class="vl-chart__tick" style="--v:10">10M</span></div>
+        </div>
+      </div>
+      <figcaption>One unit per chart (here, people). Qualifier tags label each number's type.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ 10c · STACKED BAR + QUADRANT ============================ -->
+  <section class="vl-section" id="stackbar">
+    <h2>Stacked bar + quadrant</h2>
+    <div class="vl-prose">
+      <p><code>.vl-stackbar</code>: segments sized by <code>--v</code> against <code>--max</code>. Segments too narrow for their
+        label take <code>__seg--out</code> (below) or <code>__seg--above</code>; <code>__brackets</code> groups segments.</p>
+    </div>
+    <figure class="vl-figure">
+      <div class="vl-figure__head"><span class="vl-figure__num">F6</span><span class="vl-figure__title">Use of funds, to scale</span></div>
+      <div class="vl-figure__body">
+        <div class="vl-stackbar" style="--max:100" role="img" aria-label="Budget split: A 5, B 38, C 12, D 5, E 40.">
+          <div class="vl-stackbar__bar">
+            <span class="vl-stackbar__seg vl-mark--2 vl-stackbar__seg--above" style="--v:5"><span class="vl-stackbar__lbl">A $5k</span></span>
+            <span class="vl-stackbar__seg vl-mark--1" style="--v:38"><span class="vl-stackbar__lbl">B · Build $38k</span></span>
+            <span class="vl-stackbar__seg vl-mark--3" style="--v:12"><span class="vl-stackbar__lbl">C $12k</span></span>
+            <span class="vl-stackbar__seg vl-mark--4 vl-stackbar__seg--out" style="--v:5"><span class="vl-stackbar__lbl">D $5k</span></span>
+            <span class="vl-stackbar__seg vl-mark--6" style="--v:40"><span class="vl-stackbar__lbl">E · People $40k</span></span>
+          </div>
+          <div class="vl-stackbar__brackets"><span class="vl-stackbar__bracket" style="--v:60"><b>60%</b> build and test</span><span class="vl-stackbar__bracket" style="--v:40"><b>40%</b> people</span></div>
+        </div>
+      </div>
+      <figcaption>Hairline gaps separate segments; labels go outside when a segment is under ~8%.</figcaption>
+    </figure>
+
+    <div class="vl-prose">
+      <p><code>.vl-quad</code>: a 2×2 with ordinal axes (0&ndash;100). <code>__ytick</code>/<code>__xtick</code> name the tiers,
+        <code>__zone</code> shades a region, <code>__pt</code> places a <code>__dot</code> (any mark) and its <code>__lbl</code>
+        (<code>__pt--l/--t/--b</code> move the label), <code>__note</code> pins a short quote.</p>
+    </div>
+    <figure class="vl-figure">
+      <div class="vl-figure__head"><span class="vl-figure__num">F7</span><span class="vl-figure__title">Positioning, ordinal not to scale</span></div>
+      <div class="vl-figure__body">
+        <div class="vl-quad" role="img" aria-label="Options placed by reach and fit; the target sits alone top right.">
+          <div class="vl-quad__ytitle">Fit for the job</div>
+          <div class="vl-quad__yaxis"><span class="vl-quad__ytick" style="--y:88">Reference level</span><span class="vl-quad__ytick" style="--y:50">Partial</span><span class="vl-quad__ytick" style="--y:10">None published</span></div>
+          <div class="vl-quad__plot">
+            <span class="vl-quad__zone" style="--x0:62;--x1:100;--y0:62;--y1:100"><span>Open</span></span>
+            <div class="vl-quad__pt" style="--x:16;--y:88"><i class="vl-quad__dot vl-mark--ink"></i><span class="vl-quad__lbl">Option A<small>accurate, single-use</small></span></div>
+            <div class="vl-quad__pt" style="--x:20;--y:12"><i class="vl-quad__dot vl-mark--3"></i><span class="vl-quad__lbl">Option B<small>no data</small></span></div>
+            <div class="vl-quad__pt vl-quad__pt--l" style="--x:84;--y:46"><i class="vl-quad__dot vl-mark--3"></i><span class="vl-quad__lbl">Option C<small>all day, weak under load</small></span></div>
+            <div class="vl-quad__pt vl-quad__pt--l" style="--x:86;--y:86"><i class="vl-quad__dot vl-mark--target"></i><span class="vl-quad__lbl">Ours<small>target, not a result</small></span></div>
+            <div class="vl-quad__note" style="--x:40;--y:20">&ldquo;Tighten it for training, loosen it after.&rdquo;<cite>Maker help page</cite></div>
+          </div>
+          <div class="vl-quad__xaxis"><span class="vl-quad__xtick" style="--x:0;--ax:0">No</span><span class="vl-quad__xtick" style="--x:100;--ax:-100">Yes</span></div>
+          <div class="vl-quad__xtitle">Worn all day in one setup</div>
+        </div>
+      </div>
+      <figcaption>The subject's position is a hollow target until measured.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============================ 10d · STEPS + TIMELINE ============================ -->
+  <section class="vl-section" id="steps">
+    <h2>Steps + timeline</h2>
+    <div class="vl-prose">
+      <p><code>.vl-steps</code> (set <code>--n</code>): a left-to-right sequence of cards with connectors. <code>__item--hl</code>
+        marks the one step that matters; <code>__dl</code> holds key/value rows; a closing pill is the status chip;
+        <code>__band</code> items form an aligned bar beneath (span with <code>--span</code>). <code>.vl-steps--rise</code> makes a staircase.</p>
+    </div>
+    <ol class="vl-steps" style="--n:4">
+      <li class="vl-steps__item"><span class="vl-steps__k">0</span><h4 class="vl-steps__title">Trace</h4><dl class="vl-steps__dl"><dt>Pass</dt><dd>signal on 4 of 5</dd><dt>Fail</dt><dd>redesign</dd></dl><span class="vl-pill vl-pill--ink">Registered</span></li>
+      <li class="vl-steps__item"><span class="vl-steps__k">1</span><h4 class="vl-steps__title">Wear</h4><dl class="vl-steps__dl"><dt>Pass</dt><dd>80% of nights</dd><dt>Fail</dt><dd>redesign</dd></dl><span class="vl-pill">Planned</span></li>
+      <li class="vl-steps__item vl-steps__item--hl"><span class="vl-steps__k">A</span><h4 class="vl-steps__title">Prototype</h4><dl class="vl-steps__dl"><dt>Pass</dt><dd>&lt;5% per segment</dd><dt>Fail</dt><dd><b>stop</b></dd></dl><span class="vl-pill vl-pill--target">Target</span></li>
+      <li class="vl-steps__item"><span class="vl-steps__k">B</span><h4 class="vl-steps__title">Channel</h4><dl class="vl-steps__dl"><dt>Pass</dt><dd>cost ≤ $55</dd></dl><span class="vl-pill">Planned</span></li>
+      <li class="vl-steps__band vl-mark--soft" style="--span:2">Self-funded</li>
+      <li class="vl-steps__band vl-mark--hl">This round</li>
+      <li class="vl-steps__band vl-mark--ink">Next round</li>
+    </ol>
+    <div class="vl-mt-6"></div>
+    <ol class="vl-steps vl-steps--rise" style="--n:4">
+      <li class="vl-steps__item"><h4 class="vl-steps__title">Position</h4><p class="vl-steps__body">Today; copyable.</p><span class="vl-pill vl-pill--ink">Done</span></li>
+      <li class="vl-steps__item vl-steps__item--hl"><h4 class="vl-steps__title">File</h4><p class="vl-steps__body">Protect the invention.</p><span class="vl-pill vl-pill--brand">Next</span></li>
+      <li class="vl-steps__item"><h4 class="vl-steps__title">Publish</h4><p class="vl-steps__body">First data in the hard case.</p><span class="vl-pill">Planned</span></li>
+      <li class="vl-steps__item"><h4 class="vl-steps__title">Compound</h4><p class="vl-steps__body">Distribution that makes data.</p><span class="vl-pill">Planned</span></li>
+    </ol>
+
+    <div class="vl-prose vl-mt-6">
+      <p><code>.vl-timeline</code>: dated items on one rail. The node takes a mark (<code>--ink</code> done, <code>--hl</code> next,
+        <code>--target</code> planned, <code>--dia</code> a gate); <code>__item--plan</code> dashes the rail after it. On phones it becomes a vertical list.</p>
+    </div>
+    <ol class="vl-timeline">
+      <li class="vl-timeline__item"><span class="vl-timeline__when">Month 0</span><span class="vl-timeline__node vl-mark--ink"></span><span class="vl-timeline__what"><b>Close</b>round closes</span></li>
+      <li class="vl-timeline__item vl-timeline__item--plan"><span class="vl-timeline__when">Month 3–4</span><span class="vl-timeline__node vl-mark--target"></span><span class="vl-timeline__what"><b>Works-like build</b>first unit</span></li>
+      <li class="vl-timeline__item vl-timeline__item--plan"><span class="vl-timeline__when">Month 6</span><span class="vl-timeline__node vl-mark--target"></span><span class="vl-timeline__what"><b>Pilot</b>athletes</span></li>
+      <li class="vl-timeline__item vl-timeline__item--hl"><span class="vl-timeline__when">Month 6</span><span class="vl-timeline__node vl-mark--hl vl-mark--dia"></span><span class="vl-timeline__what"><b>Gate</b>pass or stop</span></li>
+    </ol>
+  </section>
+
+  <!-- ============================ 10e · STATS, META, QUALIFIERS, QUOTE, GLOSSARY ============================ -->
+  <section class="vl-section" id="stats">
+    <h2>Stats, meta, qualifiers</h2>
+    <div class="vl-prose">
+      <p><code>.vl-stats</code> &gt; <code>.vl-stat</code> (<code>__n</code> number, <code>__l</code> meaning; <code>--hl</code>; <code>.vl-stats--lg</code> for an ask).
+        <code>.vl-q</code> tags a number's type: <abbr class="vl-q" title="Fact">F</abbr> fact, <abbr class="vl-q" title="Estimate">E</abbr> estimate,
+        <abbr class="vl-q vl-q--t" title="Target">T</abbr> target, <abbr class="vl-q" title="Derived">D</abbr> derived,
+        <abbr class="vl-q vl-q--h" title="Hypothesis">H</abbr> hypothesis, <abbr class="vl-q" title="Plan">P</abbr> plan.
+        <code>.vl-meta</code> is a labelled strip for covers and mastheads.</p>
+    </div>
+    <div class="vl-stats">
+      <div class="vl-stat"><div class="vl-stat__n">$149</div><div class="vl-stat__l">price to own <abbr class="vl-q" title="Plan">P</abbr></div></div>
+      <div class="vl-stat vl-stat--hl"><div class="vl-stat__n">&lt;5%</div><div class="vl-stat__l">error per segment <abbr class="vl-q vl-q--t" title="Target">T</abbr></div></div>
+      <div class="vl-stat"><div class="vl-stat__n">1&ndash;2.5M</div><div class="vl-stat__l">people in the segment <abbr class="vl-q" title="Estimate">E</abbr></div></div>
+      <div class="vl-stat"><div class="vl-stat__n">5</div><div class="vl-stat__l">gates with pass lines</div></div>
+    </div>
+    <dl class="vl-meta vl-mt-6">
+      <div><dt>Stage</dt><dd>Pre-seed</dd></div>
+      <div><dt>Raising</dt><dd>≈$170k</dd></div>
+      <div><dt>Contact</dt><dd>name@example.com</dd></div>
+      <div><dt>Version</dt><dd>v1 · Oct 2026</dd></div>
+    </dl>
+    <div class="vl-cols vl-mt-6">
+      <blockquote class="vl-quote"><p>&ldquo;Wrist for daily wear. Arm for training.&rdquo;</p><cite>Maker product page</cite></blockquote>
+      <dl class="vl-glossary">
+        <div><dt>MAPE</dt><dd>Mean absolute percentage error</dd></div>
+        <div><dt>HIIT</dt><dd>High-intensity interval training</dd></div>
+        <div><dt>BLE</dt><dd>Bluetooth Low Energy</dd></div>
+      </dl>
+    </div>
+    <div class="sg-row">
+      <svg class="vl-icon vl-icon--lg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+      <svg class="vl-icon vl-icon--lg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+      <span class="vl-pill vl-pill--target">Target</span><span class="vl-pill vl-pill--ink">Registered 1 Nov</span><span class="vl-pill vl-pill--brand">Next</span>
+    </div>
+  </section>
+
+  <!-- ============================ 10f · TABLE + RENDER ADDITIONS ============================ -->
+  <section class="vl-section" id="table-render">
+    <h2>Highlight, compact tables, render frames</h2>
+    <div class="vl-prose">
+      <p><code>.vl-hl</code> highlights a cell, a row (<code>tr.vl-hl</code>) or a column (on each cell; a head cell turns crimson).
+        <code>table.vl-table--compact</code> tightens tables for slides and appendices. A <code>.vl-figure--render</code> frames an image
+        (cap its height with <code>--vl-render-h</code>); <code>.vl-figure__badge</code> stamps it so the label survives cropping.</p>
+    </div>
+    <div class="vl-cols">
+      <div class="vl-table-wrap">
+        <table class="vl-table vl-table--compact">
+          <thead><tr><th>Need</th><th>Today</th><th class="vl-hl">Ours (target)</th></tr></thead>
+          <tbody>
+            <tr><td>All day</td><td class="vl-no">✗ No</td><td class="vl-hl vl-yes">✓ Design</td></tr>
+            <tr><td>Under load</td><td class="vl-maybe">~ Partial</td><td class="vl-hl">&lt;5% <abbr class="vl-q vl-q--t" title="Target">T</abbr></td></tr>
+            <tr><td>Cost</td><td class="vl-num">$90</td><td class="vl-hl vl-num">$55</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure class="vl-figure vl-figure--render" style="--vl-render-h:160px">
+        <div class="vl-figure__body"><span class="vl-figure__badge">Design intent</span><img alt="Placeholder render" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'%3E%3Crect width='320' height='200' fill='%23efeeec'/%3E%3Ccircle cx='160' cy='100' r='56' fill='%23d6d3cd'/%3E%3Crect x='136' y='60' width='48' height='80' rx='12' fill='%235a5a5a'/%3E%3C/svg%3E"></div>
+        <figcaption>Design intent, not production hardware.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================ 10g · SLIDE + SHEET ADDITIONS ============================ -->
+  <section class="vl-section" id="pitch-layout">
+    <h2>Slide + sheet additions</h2>
+    <div class="vl-prose">
+      <ul>
+        <li><code>.vl-slide__source</code> sits in <code>.vl-slide__footer</code> beside the page number: sentence case, muted, wraps to two lines.</li>
+        <li><code>.vl-slide__notes</code> is hidden on screen. On a deck with <code>.vl-deck--handout</code>, print puts each slide on a 1440×1080 page with its note in a band beneath (the read-alone PDF). Plain decks print one 1440×900 page per slide.</li>
+        <li><code>.vl-slide--dense</code> (smaller title, tighter padding) and <code>.vl-slide--wide</code> (lifts the 880px cap) fit an assertion, a visual and a source on one 1440×900 slide; <code>.vl-slide__cols--3-2</code>/<code>--2-3</code> weight a split, <code>--mid</code> centres it.</li>
+        <li><code>.vl-sheet</code> is a single printable page: <code>__cols</code> flows blocks column-major in two columns (one at ≤900px), <code>__span</code> crosses both, <code>__fine</code> is fine print. Print: US Letter, content 7.27 × 10.0in (fits A4 too), body 9pt, fine 6.5pt.</li>
+        <li>Print always uses the light theme; figures and charts stay light islands in dark mode.</li>
+      </ul>
+      <p>Worked example: the <a href="slides-demo.html#dense">dense slide in the demo deck</a> (chart, source line, note).</p>
+    </div>
+    <div class="vl-sheet" style="padding:0">
+      <div class="vl-sheet__cols">
+        <div class="vl-card vl-card--soft"><div class="vl-card__title">Block 1</div><div class="vl-card__body">Blocks flow down the first column, then the second.</div></div>
+        <div class="vl-card vl-card--soft"><div class="vl-card__title">Block 2</div><div class="vl-card__body">Never split across columns.</div></div>
+        <div class="vl-card vl-card--soft"><div class="vl-card__title">Block 3</div><div class="vl-card__body">Reading order is DOM order.</div></div>
+        <div class="vl-card vl-card--soft"><div class="vl-card__title">Block 4</div><div class="vl-card__body"><span class="vl-sheet__fine">Fine print: sources and terms.</span></div></div>
+      </div>
+    </div>
   </section>
 
   <!-- ============================ 11 · BAND ============================ -->

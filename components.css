@@ -411,3 +411,546 @@ sup.vl-cite a:hover{text-decoration:underline}
 .vl-prose details{margin:10px 0 4px; font-size:14.5px}
 .vl-prose summary{cursor:pointer; font-weight:600; color:var(--vl-brand-text); margin-bottom:6px}
 .vl-prose details[open] summary{margin-bottom:8px}
+
+/* ============================================================
+   ============  DATA & PITCH COMPONENTS (2026-10)  ============
+   Sections 11–20. Colour comes only from tokens: theme tokens
+   for text and rules, the theme-independent c1–c6 / cs diagram
+   tokens for marks. Charts, stacked bars and quadrants are light
+   islands (see tokens.css). No new hue: crimson (c1) marks the
+   subject / target; everything else is a grey.
+   ============================================================ */
+
+/* ============================================================
+   11. MARKS — one fill vocabulary for chart bars, dots, stacked
+   segments, legend swatches, timeline nodes and funding bands.
+   Put a modifier on any mark element (or on a row to set a series).
+     --mk     solid colour        --mk-bg  fill (overrides --mk)
+     --mk-bd  border              --mk-tx  text on the mark
+     --mk-r   corner radius       --mk-rot rotation (shapes)
+   ============================================================ */
+.vl-mark--1,.vl-mark--hl {--mk:var(--vl-c1-ac)}   /* crimson: the subject   */
+.vl-mark--2,.vl-mark--ink{--mk:var(--vl-c2-ac)}   /* ink: totals, reference */
+.vl-mark--3{--mk:var(--vl-c3-ac)}                 /* graphite: default      */
+.vl-mark--4{--mk:var(--vl-c4-ac)}                 /* stone                  */
+.vl-mark--5{--mk:var(--vl-c5-ac)}                 /* deep red: risk         */
+.vl-mark--6{--mk:var(--vl-c6-ac)}                 /* charcoal               */
+.vl-mark--s{--mk:var(--vl-cs-ac)}                 /* slate                  */
+/* a solid mark also resets any fill / border inherited from a series row */
+:is(.vl-mark--1,.vl-mark--hl,.vl-mark--2,.vl-mark--ink,.vl-mark--3,.vl-mark--4,.vl-mark--5,.vl-mark--6,.vl-mark--s){
+  --mk-bg:var(--mk); --mk-bd:0 solid transparent; --mk-tx:#fff;
+}
+/* light fill + hairline: costs, a secondary series, context */
+.vl-mark--soft{--mk-bg:var(--vl-c4-bg); --mk-bd:1px solid var(--vl-c4-ac); --mk-tx:var(--vl-c4-tx)}
+/* hollow + dashed: a TARGET, never a measured result */
+.vl-mark--target{--mk-bg:transparent; --mk-bd:2px dashed var(--vl-c1-ac); --mk-tx:var(--vl-c1-tx)}
+/* hatched: upside that is not in the base case */
+.vl-mark--upside{
+  --mk-bg:repeating-linear-gradient(135deg,var(--mk,var(--vl-c1-ac)) 0 2px,transparent 2px 6px);
+  --mk-bd:1px solid var(--mk,var(--vl-c1-ac)); --mk-tx:var(--vl-c1-tx);
+}
+/* shapes for dots, swatches and nodes (circle is the default) */
+.vl-mark--sq{--mk-r:2px}
+.vl-mark--dia{--mk-r:2px; --mk-rot:45deg}
+
+/* ---- legend: works under any chart, stacked bar or quadrant ---- */
+.vl-legend{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:var(--vl-space-2) var(--vl-space-4);
+  margin-top:var(--vl-space-3);
+  font-size:12.5px; line-height:1.3; color:var(--vl-text-muted);
+}
+.vl-legend__key{display:inline-flex; align-items:center; gap:6px}
+.vl-legend__swatch{
+  display:inline-block; flex:none; width:16px; height:11px; box-sizing:border-box;
+  border-radius:var(--mk-r,1px); transform:rotate(var(--mk-rot,0deg));
+  background:var(--mk-bg,var(--mk,var(--vl-c3-ac)));
+  border:var(--mk-bd,0 solid transparent);
+}
+
+/* ============================================================
+   12. CHART — horizontal, to scale, from zero.
+   Data drives geometry: --max on .vl-chart; --v (and optional
+   --from for a from→to step: waterfalls, ranges) on each mark.
+   Rows are label | track. Modifiers on .vl-chart:
+     --grid  gridlines every --tick      --ref / --ref2  dashed lines at --ref / --ref2
+     --band  shaded reference band from --b0 to --b1
+   A light island: place it in .vl-figure__body.
+   ============================================================ */
+.vl-chart{
+  --vl-chart-label:11em;   /* label column width            */
+  --vl-chart-val:4.75em;   /* room right of the plot for values */
+  --vl-chart-row:30px;     /* row height                    */
+  --vl-chart-bar:16px;     /* bar thickness                 */
+  --vl-chart-dot:13px;     /* dot size                      */
+  display:grid;
+  grid-template-columns:var(--vl-chart-label) minmax(0,1fr);
+  column-gap:var(--vl-space-3);
+  background:var(--vl-surface); color:var(--vl-text);
+  font-family:var(--vl-font-sans); font-size:13.5px; line-height:1.3;
+}
+.vl-chart--grid{--ch-grid:repeating-linear-gradient(90deg,var(--vl-border) 0 1px,transparent 1px calc(100% * var(--tick) / var(--max)))}
+.vl-chart--band{--ch-band:linear-gradient(90deg,
+  transparent calc(100% * var(--b0) / var(--max)),
+  var(--vl-c1-bg) calc(100% * var(--b0) / var(--max)) calc(100% * var(--b1) / var(--max)),
+  transparent calc(100% * var(--b1) / var(--max)))}
+.vl-chart__row{display:contents}
+.vl-chart__label{
+  align-self:center; text-align:right; padding:3px 0;
+  font-weight:600; color:var(--vl-text); overflow-wrap:anywhere;
+}
+.vl-chart__sub{display:block; font-weight:400; font-size:.86em; color:var(--vl-text-muted)}
+.vl-chart__track{
+  position:relative; min-height:var(--vl-chart-row);
+  margin-right:var(--vl-chart-val);
+  border-left:1.5px solid var(--vl-text-2);              /* the zero baseline */
+  background-image:var(--ch-band,none),var(--ch-grid,none);
+}
+.vl-chart__bar{
+  position:absolute; top:var(--y,50%); transform:translateY(-50%);
+  height:var(--vl-chart-bar); box-sizing:border-box;
+  left:calc(100% * min(var(--from,0),var(--v)) / var(--max));
+  width:calc(100% * (max(var(--from,0),var(--v)) - min(var(--from,0),var(--v))) / var(--max));
+  background:var(--mk-bg,var(--mk,var(--vl-c3-ac)));
+  border:var(--mk-bd,0 solid transparent);
+  border-radius:0 var(--vl-radius-sm) var(--vl-radius-sm) 0;
+}
+.vl-chart__dot{
+  position:absolute; top:var(--y,50%); z-index:3;
+  left:calc(100% * var(--v) / var(--max));
+  width:var(--vl-chart-dot); height:var(--vl-chart-dot); box-sizing:border-box;
+  transform:translate(-50%,-50%) rotate(var(--mk-rot,0deg));
+  border-radius:var(--mk-r,50%);
+  background:var(--mk-bg,var(--mk,var(--vl-c3-ac)));
+  border:var(--mk-bd,1.5px solid var(--vl-surface));
+}
+.vl-chart__val{
+  position:absolute; top:var(--y,50%); transform:translateY(-50%); z-index:2;
+  left:calc(100% * max(var(--from,0),var(--v)) / var(--max));
+  padding:0 3px 0 6px; white-space:nowrap;
+  font-family:var(--vl-font-mono); font-size:12.5px; font-variant-numeric:tabular-nums;
+  color:var(--vl-text); background:var(--vl-surface);   /* sits above reference lines */
+}
+.vl-chart__val--dot{padding-left:calc(var(--vl-chart-dot) / 2 + 5px)}
+/* reference lines (one or two), drawn through every track */
+.vl-chart--ref .vl-chart__track::before,
+.vl-chart--ref2 .vl-chart__track::after{
+  content:""; position:absolute; top:0; bottom:0; width:0; z-index:1;
+  border-left:2px dashed var(--vl-c1-ac);
+}
+.vl-chart--ref .vl-chart__track::before{left:calc(100% * var(--ref) / var(--max))}
+.vl-chart--ref2 .vl-chart__track::after{left:calc(100% * var(--ref2) / var(--max)); border-left-color:var(--vl-c2-ac)}
+/* optional head row (reference-line labels) and axis row, plot column only */
+.vl-chart__head,.vl-chart__axis{grid-column:2; position:relative; margin-right:var(--vl-chart-val)}
+.vl-chart__head{height:20px}
+.vl-chart__axis{height:24px; border-top:1.5px solid var(--vl-text-2)}
+.vl-chart__reflabel{
+  position:absolute; bottom:3px; transform:translateX(-50%); white-space:nowrap;
+  left:calc(100% * var(--ref) / var(--max));
+  font-size:12px; font-weight:600; color:var(--vl-c1-tx);
+}
+.vl-chart__reflabel--2{left:calc(100% * var(--ref2) / var(--max)); color:var(--vl-c2-tx)}
+.vl-chart__tick{
+  position:absolute; top:5px; transform:translateX(-50%); white-space:nowrap;
+  left:calc(100% * var(--v) / var(--max));
+  font-family:var(--vl-font-mono); font-size:11.5px; color:var(--vl-text-muted);
+}
+.vl-chart__unit{
+  grid-column:2; margin-right:var(--vl-chart-val);
+  text-align:center; font-size:12px; color:var(--vl-text-muted);
+}
+.vl-chart .vl-legend{grid-column:1 / -1}
+@media (max-width:560px){
+  .vl-chart{--vl-chart-label:7.5em; --vl-chart-val:4em; font-size:12.5px}
+}
+
+/* ============================================================
+   13. STACKED BAR — to scale. --max on .vl-stackbar (the total,
+   or a larger axis maximum); --v on each segment. Segments under
+   ~8% carry their label outside (__seg--out, or --above).
+   __brackets groups segments (e.g. a 55 / 45 split).
+   ============================================================ */
+.vl-stackbar{
+  --vl-stackbar-h:34px;
+  background:var(--vl-surface); color:var(--vl-text);
+  font-family:var(--vl-font-sans); font-size:13px; line-height:1.3;
+}
+.vl-stackbar__bar{
+  display:flex; height:var(--vl-stackbar-h);
+  border-left:1.5px solid var(--vl-text-2);              /* zero */
+}
+.vl-stackbar:has(.vl-stackbar__seg--out) .vl-stackbar__bar{margin-bottom:var(--vl-space-6)}
+.vl-stackbar:has(.vl-stackbar__seg--above) .vl-stackbar__bar{margin-top:var(--vl-space-6)}
+.vl-stackbar__seg{
+  position:relative; flex:0 0 calc(100% * var(--v) / var(--max)); min-width:0;
+  display:flex; align-items:center; padding:0 6px; box-sizing:border-box;
+  background:var(--mk-bg,var(--mk,var(--vl-c3-ac)));
+  border:var(--mk-bd,0 solid transparent);
+  box-shadow:inset -1.5px 0 0 var(--vl-surface);       /* hairline between segments */
+}
+.vl-stackbar__lbl{
+  white-space:nowrap; overflow:hidden;
+  font-size:12px; font-weight:600; color:var(--mk-tx,#fff);
+}
+.vl-stackbar__lbl small{font-weight:400; opacity:.85}
+.vl-stackbar__seg--out .vl-stackbar__lbl,
+.vl-stackbar__seg--above .vl-stackbar__lbl{
+  position:absolute; left:0; overflow:visible; color:var(--vl-text);
+}
+.vl-stackbar__seg--out .vl-stackbar__lbl{top:calc(100% + 8px)}
+.vl-stackbar__seg--above .vl-stackbar__lbl{bottom:calc(100% + 8px)}
+.vl-stackbar__seg--out::after,
+.vl-stackbar__seg--above::after{
+  content:""; position:absolute; left:6px; height:7px; border-left:1px solid var(--vl-text-2);
+}
+.vl-stackbar__seg--out::after{top:100%}
+.vl-stackbar__seg--above::after{bottom:100%}
+.vl-stackbar__brackets{display:flex; margin-top:var(--vl-space-3)}
+.vl-stackbar__bracket{
+  position:relative; flex:0 0 calc(100% * var(--v) / var(--max)); box-sizing:border-box;
+  padding:8px 4px 0; text-align:center;
+  border-top:1.5px solid var(--vl-text-2);
+  font-size:12px; color:var(--vl-text-muted);
+}
+.vl-stackbar__bracket b{color:var(--vl-text)}
+.vl-stackbar__bracket::before,.vl-stackbar__bracket::after{
+  content:""; position:absolute; top:-7px; height:7px; border-left:1.5px solid var(--vl-text-2);
+}
+.vl-stackbar__bracket::before{left:0}
+.vl-stackbar__bracket::after{right:0}
+.vl-stackbar__bracket + .vl-stackbar__bracket{border-left:3px solid var(--vl-surface)}
+
+/* ============================================================
+   14. QUADRANT — a 2×2 with ordinal axes (positions 0–100).
+   __ytick / __xtick label tiers; __zone shades a region;
+   __pt places a mark (__dot) and its label (__lbl, default right;
+   __pt--l / --t / --b move it); __note pins a small quote.
+   ============================================================ */
+.vl-quad{
+  --vl-quad-h:360px; --vl-quad-yw:9.5em; --vl-quad-lw:15em; --vl-quad-nw:16em;
+  display:grid;
+  grid-template-columns:var(--vl-quad-yw) minmax(0,1fr);
+  grid-template-areas:"yt yt" "ya pl" ". xa" ". xt";
+  column-gap:var(--vl-space-3);
+  background:var(--vl-surface); color:var(--vl-text);
+  font-family:var(--vl-font-sans); font-size:13px; line-height:1.3;
+}
+.vl-quad__ytitle,.vl-quad__xtitle{
+  font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.04em; font-size:12.5px; color:var(--vl-text-2);
+}
+.vl-quad__ytitle{grid-area:yt; margin-bottom:var(--vl-space-2)}
+.vl-quad__ytitle::before{content:"\2191\00a0"; color:var(--vl-brand)}
+.vl-quad__xtitle{grid-area:xt; text-align:right; margin-top:2px}
+.vl-quad__xtitle::after{content:"\00a0\2192"; color:var(--vl-brand)}
+.vl-quad__yaxis{grid-area:ya; position:relative; height:var(--vl-quad-h)}
+.vl-quad__ytick{
+  position:absolute; right:0; bottom:calc(var(--y) * 1%); transform:translateY(50%);
+  max-width:100%; text-align:right; font-size:12px; color:var(--vl-text-muted);
+}
+.vl-quad__plot{
+  grid-area:pl; position:relative; height:var(--vl-quad-h);
+  border-left:1.5px solid var(--vl-text-2); border-bottom:1.5px solid var(--vl-text-2);
+  background:
+    linear-gradient(var(--vl-border),var(--vl-border)) 50% 0 / 1px 100% no-repeat,
+    linear-gradient(var(--vl-border),var(--vl-border)) 0 50% / 100% 1px no-repeat;
+}
+.vl-quad__zone{
+  position:absolute;
+  left:calc(var(--x0,50) * 1%); right:calc((100 - var(--x1,100)) * 1%);
+  bottom:calc(var(--y0,50) * 1%); top:calc((100 - var(--y1,100)) * 1%);
+  background:var(--vl-brand-soft);
+}
+.vl-quad__zone > span{
+  position:absolute; top:6px; right:8px;
+  font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.06em; font-size:11px; color:var(--vl-brand-text);
+}
+.vl-quad__pt{position:absolute; left:calc(var(--x) * 1%); bottom:calc(var(--y) * 1%); width:0; height:0; z-index:2}
+.vl-quad__dot{
+  position:absolute; left:0; top:0; width:14px; height:14px; box-sizing:border-box;
+  transform:translate(-50%,-50%) rotate(var(--mk-rot,0deg));
+  border-radius:var(--mk-r,50%);
+  background:var(--mk-bg,var(--mk,var(--vl-c3-ac)));
+  border:var(--mk-bd,1.5px solid var(--vl-surface));
+}
+.vl-quad__dot.vl-mark--target{width:22px; height:22px}
+.vl-quad__lbl{
+  position:absolute; top:0; left:12px; transform:translateY(-50%);
+  width:max-content; max-width:var(--vl-quad-lw);
+  font-weight:600; font-size:13px; line-height:1.25; color:var(--vl-text);
+}
+.vl-quad__lbl small{display:block; font-weight:400; font-size:11.5px; color:var(--vl-text-muted)}
+.vl-quad__pt--l .vl-quad__lbl{left:auto; right:12px; text-align:right}
+.vl-quad__pt--t .vl-quad__lbl{top:auto; bottom:12px; left:0; transform:translateX(-50%); text-align:center}
+.vl-quad__pt--b .vl-quad__lbl{top:12px; left:0; transform:translateX(-50%); text-align:center}
+.vl-quad__note{
+  position:absolute; left:calc(var(--x) * 1%); bottom:calc(var(--y) * 1%); z-index:3;
+  max-width:var(--vl-quad-nw); padding:6px 8px;
+  background:var(--vl-surface); border:1px solid var(--vl-border-strong);
+  border-left:3px solid var(--vl-text-2); border-radius:var(--vl-radius-sm);
+  box-shadow:var(--vl-shadow-sm);
+  font-size:11.5px; line-height:1.35; font-style:italic; color:var(--vl-text-2);
+}
+.vl-quad__note cite{display:block; margin-top:3px; font-style:normal; font-weight:600; font-size:10.5px; color:var(--vl-text-muted)}
+.vl-quad__xaxis{grid-area:xa; position:relative; height:22px}
+.vl-quad__xtick{
+  position:absolute; top:4px; left:calc(var(--x) * 1%); white-space:nowrap;
+  transform:translateX(calc(var(--ax,-50) * 1%));
+  font-size:12px; color:var(--vl-text-muted);
+}
+@media (max-width:560px){
+  .vl-quad{--vl-quad-h:300px; --vl-quad-yw:6.5em; --vl-quad-lw:9em; font-size:12px}
+}
+
+/* ============================================================
+   15. STEPS — a left-to-right sequence of cards with connectors:
+   gate ladders, staircases (--rise), expansion paths.
+   Set --n (columns) on .vl-steps. __item--hl marks the one step
+   that matters (crimson). __dl holds key/value rows (pass line,
+   if it fails); a pill at the end becomes the status chip.
+   __band items after the cards form an aligned funding bar
+   (span with --span; colour with a .vl-mark modifier).
+   ============================================================ */
+.vl-steps{
+  --n:4; --vl-steps-gap:var(--vl-space-5); --vl-steps-rise:22px;
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(var(--n),minmax(0,1fr));
+  column-gap:var(--vl-steps-gap); row-gap:var(--vl-space-2);
+  font-family:var(--vl-font-sans); color:var(--vl-text-2);
+}
+.vl-steps__item{
+  position:relative; display:flex; flex-direction:column; gap:6px; min-width:0;
+  padding:var(--vl-space-3);
+  background:var(--vl-surface);
+  border:1px solid var(--vl-border); border-top:4px solid var(--vl-text-faint);
+  border-radius:var(--vl-radius); box-shadow:var(--vl-shadow-sm);
+  font-size:13.5px; line-height:1.4;
+}
+.vl-steps__item + .vl-steps__item::before{
+  content:""; position:absolute; top:50%;
+  left:calc(var(--vl-steps-gap) / -2 - 4px); transform:translateY(-50%);
+  border:6px solid transparent; border-left:8px solid var(--vl-edge); border-right:0;
+}
+.vl-steps__item--hl{border-top-color:var(--vl-brand); border-color:var(--vl-brand); background:var(--vl-brand-soft)}
+.vl-steps__k{
+  font-family:var(--vl-font-display); font-weight:700; font-size:22px; line-height:1;
+  color:var(--vl-text);
+}
+.vl-steps__item--hl .vl-steps__k{color:var(--vl-brand-text)}
+.vl-steps__title{
+  margin:0; font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.04em; font-size:14px; line-height:1.2; color:var(--vl-text);
+}
+.vl-steps__body{margin:0; color:var(--vl-text-2)}
+.vl-steps__dl{margin:0; display:grid; grid-template-columns:auto minmax(0,1fr); gap:3px 8px; font-size:12.5px; line-height:1.35}
+.vl-steps__dl dt{
+  font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.06em; font-size:10.5px; color:var(--vl-text-faint); padding-top:1px;
+}
+.vl-steps__dl dd{margin:0; color:var(--vl-text-2)}
+.vl-steps__item > .vl-pill:last-child{align-self:flex-start; margin-top:auto}
+.vl-steps--rise{align-items:end}
+.vl-steps--rise .vl-steps__item:nth-child(2){--i:1}
+.vl-steps--rise .vl-steps__item:nth-child(3){--i:2}
+.vl-steps--rise .vl-steps__item:nth-child(4){--i:3}
+.vl-steps--rise .vl-steps__item:nth-child(5){--i:4}
+.vl-steps--rise .vl-steps__item:nth-child(6){--i:5}
+.vl-steps--rise .vl-steps__item:nth-child(7){--i:6}
+.vl-steps--rise .vl-steps__item{margin-bottom:calc(var(--i,0) * var(--vl-steps-rise))}
+.vl-steps__band{
+  grid-column:span var(--span,1); min-width:0;
+  padding:4px 8px; border-radius:var(--vl-radius-sm); box-sizing:border-box;
+  font-size:11.5px; font-weight:600; line-height:1.3;
+  background:var(--mk-bg,var(--mk,var(--vl-surface-3)));
+  border:var(--mk-bd,0 solid transparent);
+  color:var(--mk-tx,var(--vl-text-2));
+}
+@media (max-width:720px){
+  .vl-steps{grid-template-columns:minmax(0,1fr); row-gap:var(--vl-space-4)}
+  .vl-steps__item + .vl-steps__item::before{
+    top:calc(var(--vl-space-4) / -2 - 4px); left:50%; transform:translateX(-50%);
+    border:6px solid transparent; border-top:8px solid var(--vl-edge); border-bottom:0;
+  }
+  .vl-steps--rise .vl-steps__item{margin-bottom:0}
+  .vl-steps__band{grid-column:auto}
+}
+
+/* ============================================================
+   16. TIMELINE — dated items on one rail (milestones, "why now"
+   event strips). Node style comes from a .vl-mark modifier on
+   __node: ink = done, hl = next / the gate this round buys,
+   target = planned; --dia for a gate. __item--plan dashes the
+   rail after that item. Collapses to a vertical list on phones.
+   ============================================================ */
+.vl-timeline{
+  --vl-tl-gap:var(--vl-space-4);
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr);
+  grid-template-rows:auto 16px auto; column-gap:var(--vl-tl-gap); row-gap:6px;
+  font-family:var(--vl-font-sans); font-size:13px; line-height:1.35; color:var(--vl-text-2);
+}
+.vl-timeline__item{grid-row:span 3; display:grid; grid-template-rows:subgrid; min-width:0}
+.vl-timeline__when{
+  align-self:end; font-family:var(--vl-font-mono); font-size:12px;
+  font-variant-numeric:tabular-nums; color:var(--vl-text-muted);
+}
+.vl-timeline__item--hl .vl-timeline__when{color:var(--vl-brand-text); font-weight:600}
+.vl-timeline__node{
+  position:relative; margin-right:calc(-1 * var(--vl-tl-gap));
+  background:linear-gradient(var(--vl-border-strong),var(--vl-border-strong)) 0 50% / 100% 2px no-repeat;
+}
+.vl-timeline__item:last-child .vl-timeline__node{margin-right:0; background-size:14px 2px}
+.vl-timeline__item--plan .vl-timeline__node{
+  background:repeating-linear-gradient(90deg,var(--vl-border-strong) 0 6px,transparent 6px 10px) 0 50% / 100% 2px no-repeat;
+}
+.vl-timeline__node::after{
+  content:""; position:absolute; left:0; top:50%; width:14px; height:14px; box-sizing:border-box;
+  transform:translateY(-50%) rotate(var(--mk-rot,0deg));
+  border-radius:var(--mk-r,50%);
+  background:var(--mk-bg,var(--mk,var(--vl-surface)));
+  border:var(--mk-bd,2px solid var(--vl-text-2));
+}
+.vl-timeline__what{min-width:0; color:var(--vl-text-2)}
+.vl-timeline__what b{display:block; color:var(--vl-text); font-weight:600}
+@media (max-width:720px){
+  .vl-timeline{display:flex; flex-direction:column; gap:0}
+  .vl-timeline__item{display:grid; grid-template-columns:14px minmax(0,1fr); grid-template-rows:auto auto; column-gap:var(--vl-space-3); padding-bottom:var(--vl-space-3)}
+  .vl-timeline__node{
+    grid-column:1; grid-row:1 / span 2; margin:0 0 calc(-1 * var(--vl-space-3));
+    background:linear-gradient(var(--vl-border-strong),var(--vl-border-strong)) 50% 0 / 2px 100% no-repeat;
+  }
+  .vl-timeline__item:last-child .vl-timeline__node{background-size:2px 14px}
+  .vl-timeline__item--plan .vl-timeline__node{
+    background:repeating-linear-gradient(180deg,var(--vl-border-strong) 0 6px,transparent 6px 10px) 50% 0 / 2px 100% no-repeat;
+  }
+  .vl-timeline__node::after{top:9px}
+  .vl-timeline__when,.vl-timeline__what{grid-column:2}
+}
+
+/* ============================================================
+   17. STATS — KPI tiles: a big number and what it means.
+   __l carries the qualifier tag (.vl-q). --hl tints the number
+   crimson; .vl-stats--lg for an ask block.
+   ============================================================ */
+.vl-stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(var(--vl-stat-min,9em),1fr));
+  gap:var(--vl-space-4) var(--vl-space-5);
+  border-top:2px solid var(--vl-text); padding-top:var(--vl-space-3);
+}
+.vl-stat{min-width:0}
+.vl-stat__n{
+  font-family:var(--vl-font-display); font-weight:700; line-height:1;
+  font-size:clamp(26px,3.2vw,44px); letter-spacing:.01em;
+  font-variant-numeric:tabular-nums; color:var(--vl-text);
+}
+.vl-stat__l{margin-top:6px; font-size:13px; line-height:1.4; color:var(--vl-text-muted)}
+.vl-stat--hl .vl-stat__n{color:var(--vl-brand-text)}
+.vl-stats--lg .vl-stat__n{font-size:clamp(34px,5vw,72px)}
+
+/* ============================================================
+   18. QUALIFIER TAG — labels a number's type (RULES: fact, estimate,
+   target, derived, hypothesis, plan).
+   <abbr class="vl-q" title="Estimate">E</abbr>
+   --t: target (crimson outline) · --h: hypothesis (dashed)
+   ============================================================ */
+.vl-q{
+  display:inline-block; vertical-align:.12em; margin-left:.25em;
+  padding:.1em .34em; border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius-sm);
+  font-family:var(--vl-font-mono); font-style:normal; font-weight:600;
+  font-size:max(.62em,10px); line-height:1.1; letter-spacing:0;
+  color:var(--vl-text-muted); text-decoration:none; cursor:help;
+}
+.vl-q--t{color:var(--vl-brand-text); border-color:var(--vl-brand)}
+.vl-q--h{border-style:dashed}
+
+/* ============================================================
+   19. META STRIP, PULL QUOTE, GLOSSARY, ICON, TARGET PILL
+   ============================================================ */
+/* meta strip: labelled facts on a cover or masthead
+   <dl class="vl-meta"><div><dt>Raising</dt><dd>≈$170k</dd></div>…</dl> */
+.vl-meta{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(var(--vl-meta-min,9em),1fr));
+  gap:var(--vl-space-3) var(--vl-space-5); margin:0;
+  border-top:2px solid var(--vl-text); padding-top:var(--vl-space-3);
+}
+.vl-meta > div{min-width:0}
+.vl-meta dt{
+  margin-bottom:3px; font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.1em; font-size:11px; color:var(--vl-text-faint);
+}
+.vl-meta dd{margin:0; font-size:15px; font-weight:500; line-height:1.35; color:var(--vl-text-2); overflow-wrap:anywhere}
+.vl-meta dd a{color:inherit}
+
+/* pull quote (outside .vl-prose too) */
+.vl-quote{
+  margin:0; padding:var(--vl-space-2) var(--vl-space-4);
+  border-left:4px solid var(--vl-brand); background:var(--vl-surface-2);
+  border-radius:0 var(--vl-radius) var(--vl-radius) 0;
+}
+.vl-quote p{margin:0; font-size:15.5px; line-height:1.45; font-style:italic; color:var(--vl-text)}
+.vl-quote cite{
+  display:block; margin-top:6px; font-style:normal;
+  font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.07em; font-size:11px; color:var(--vl-text-faint);
+}
+
+/* glossary: <dl class="vl-glossary"><div><dt>MAPE</dt><dd>…</dd></div>…</dl> */
+.vl-glossary{
+  margin:0; columns:var(--vl-glossary-cols,1); column-gap:var(--vl-space-6);
+  font-size:14px; line-height:1.45;
+}
+.vl-glossary--2col{--vl-glossary-cols:2}
+.vl-glossary > div{
+  display:grid; grid-template-columns:var(--vl-glossary-term,7.5em) minmax(0,1fr);
+  gap:var(--vl-space-3); padding:5px 0; border-bottom:1px solid var(--vl-border);
+  break-inside:avoid;
+}
+.vl-glossary dt{font-family:var(--vl-font-mono); font-weight:600; font-size:.9em; color:var(--vl-text)}
+.vl-glossary dd{margin:0; color:var(--vl-text-2)}
+@media (max-width:720px){
+  .vl-glossary{columns:1}
+  .vl-glossary > div{grid-template-columns:minmax(0,1fr); gap:2px}
+}
+
+/* line icon: <svg class="vl-icon" viewBox="0 0 24 24">…</svg> (stroke = currentColor) */
+svg.vl-icon,
+:is(.vl-slide,.vl-figure,.vl-prose) svg.vl-icon{
+  display:inline-block; flex:none; width:1.25em; height:1.25em; max-width:none;
+  vertical-align:-.25em; fill:none; stroke:currentColor; stroke-width:1.75;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+svg.vl-icon--lg,
+:is(.vl-slide,.vl-figure,.vl-prose) svg.vl-icon--lg{width:2.25em; height:2.25em}
+
+/* hollow status chip: "target", "planned" */
+.vl-pill--target{
+  background:transparent; color:var(--vl-brand-text);
+  border:1px dashed var(--vl-brand);
+  padding:calc(var(--vl-space-1) - 1px) calc(var(--vl-space-2) - 1px);
+}
+
+/* ============================================================
+   20. TABLE + FIGURE ADDITIONS
+   ============================================================ */
+/* highlight a cell, a row (tr.vl-hl) or a column (td/th.vl-hl on each row) */
+table.vl-table td.vl-hl,table.vl-table tr.vl-hl td,
+.vl-prose table td.vl-hl,.vl-prose table tr.vl-hl td{background:var(--vl-brand-soft); color:var(--vl-text)}
+table.vl-table thead th.vl-hl,.vl-prose table thead th.vl-hl{background:var(--vl-brand-strong); color:var(--vl-on-brand)}
+/* denser tables for slides and appendices */
+table.vl-table--compact{font-size:13px; line-height:1.4}
+table.vl-table--compact th,table.vl-table--compact td{padding:6px 10px}
+table.vl-table--compact thead th{font-size:11px}
+
+/* images in figures; render frames with a badge that survives cropping */
+.vl-figure__body{position:relative}
+.vl-figure__body > img,.vl-figure__body > picture img{display:block; max-width:100%; height:auto; margin-inline:auto}
+.vl-figure--render .vl-figure__body{background:#f4f4f3}
+.vl-figure--render img{width:auto; max-height:var(--vl-render-h,none); object-fit:contain}
+.vl-figure__badge{
+  position:absolute; top:var(--vl-space-2); left:var(--vl-space-2); z-index:2;
+  padding:4px 7px; border-radius:var(--vl-radius-sm);
+  background:#1a1a1a; color:#fff;
+  font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.08em; font-size:10.5px; line-height:1;
+}

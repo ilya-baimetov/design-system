@@ -362,3 +362,90 @@
     print-color-adjust:exact;
   }
 }
+
+/* ============================================================
+   PITCH ADDITIONS (2026-10): source line, read-alone notes,
+   dense / wide slides, weighted columns, PDF page sizes.
+   ============================================================ */
+
+/* ---------------- Source line (sits in the footer) ----------------
+   <div class="vl-slide__footer">
+     <p class="vl-slide__source"><b>Source:</b> …</p>
+     <span class="vl-slide__num"></span>
+   </div>                                                             */
+.vl-slide__source{
+  flex:1 1 auto; min-width:0; margin:0; align-self:flex-end;
+  font-family:var(--vl-font-sans); font-weight:400; font-size:12px; line-height:1.4;
+  letter-spacing:0; text-transform:none; color:var(--vl-text-muted);
+  text-wrap:pretty;
+}
+.vl-slide__source b{font-weight:600; color:var(--vl-text-2)}
+.vl-slide__source a{color:inherit}
+.vl-slide__footer > .vl-slide__num{flex:none; align-self:flex-end}
+.vl-slide--dark .vl-slide__source,.vl-slide--section .vl-slide__source,
+.vl-slide--end .vl-slide__source,.vl-slide--image .vl-slide__source,
+.vl-slide--dark .vl-slide__source b,.vl-slide--section .vl-slide__source b,
+.vl-slide--end .vl-slide__source b,.vl-slide--image .vl-slide__source b{color:inherit}
+
+/* ---------------- Highlight clearance ----------------
+   .vl-slide__hl paints Oswald's tall content box, which extends ~.3em
+   beyond a 1.02 line box; give such titles room so the crimson block
+   never overlaps the kicker above or the visual below. */
+.vl-slide__title:has(.vl-slide__hl){margin-block:.2em}
+
+/* ---------------- Read-alone note (hidden on screen) ----------------
+   Printed beneath its slide when the deck carries .vl-deck--handout. */
+.vl-slide__notes{display:none}
+
+/* ---------------- Dense: assertion + evidence slides ---------------- */
+.vl-slide--dense{
+  padding-top:clamp(28px,3.4vw,52px);
+  padding-bottom:clamp(64px,6.6vw,96px);
+  gap:var(--vl-space-3);
+}
+.vl-slide--dense .vl-slide__title{font-size:clamp(28px,3.9vw,54px); line-height:1.04}
+.vl-slide--dense .vl-slide__lead{font-size:clamp(16px,1.7vw,21px); max-width:60ch}
+.vl-slide--dense .vl-slide__body,
+.vl-slide--dense .vl-slide__list{font-size:clamp(15px,1.45vw,19px)}
+
+/* ---------------- Wide: lift the 880px reading cap for visuals ---------------- */
+.vl-slide--wide{--vl-maxw:100%}
+
+/* ---------------- Weighted columns ---------------- */
+.vl-slide__cols--3-2{grid-template-columns:3fr 2fr}
+.vl-slide__cols--2-3{grid-template-columns:2fr 3fr}
+.vl-slide__cols--mid{align-items:center}
+@media (max-width:720px){
+  .vl-slide__cols--3-2,.vl-slide__cols--2-3{grid-template-columns:1fr}
+}
+
+/* ---------------- PDF: one slide per page at native 16:10 ----------------
+   Plain print: a 1440×900 page per slide.
+   .vl-deck--handout: a 1440×1080 page — the slide in the top 900px,
+   its .vl-slide__notes in the band beneath (the read-alone PDF). */
+@page vl-slide{size:1440px 900px; margin:0}
+@page vl-handout{size:1440px 1080px; margin:0}
+@media print{
+  .vl-deck{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .vl-deck .vl-slide{page:vl-slide; height:900px}
+  .vl-deck--handout .vl-slide{
+    --vl-notes-h:180px;
+    page:vl-handout; height:1080px;
+    padding-bottom:calc(var(--vl-notes-h) + clamp(40px,7vw,100px));
+  }
+  .vl-deck--handout .vl-slide--dense{padding-bottom:calc(var(--vl-notes-h) + clamp(64px,6.6vw,96px))}
+  .vl-deck--handout .vl-slide__footer{bottom:var(--vl-notes-h)}
+  .vl-deck--handout .vl-slide__notes{
+    display:block; position:absolute; left:0; right:0; bottom:0;
+    height:var(--vl-notes-h); box-sizing:border-box; overflow:hidden;
+    padding:var(--vl-space-4) clamp(40px,7vw,100px);
+    background:var(--vl-surface-2); border-top:2px solid var(--vl-text);
+    font-family:var(--vl-font-sans); font-size:18px; line-height:1.5;
+    text-align:left; text-transform:none; letter-spacing:0; color:var(--vl-text-2);
+  }
+  .vl-deck--handout .vl-slide__notes::before{
+    content:"Note"; display:block; margin-bottom:6px;
+    font-family:var(--vl-font-display); font-weight:600; font-size:12px;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--vl-brand-text);
+  }
+}
