@@ -120,7 +120,7 @@
         </p>
         <div class="vl-hero__meta">
           <span><b>16</b>&nbsp;tokens shown</span>
-          <span><b>18</b>&nbsp;sections</span>
+          <span><b>19</b>&nbsp;sections</span>
           <span><b>2</b>&nbsp;themes</span>
         </div>
       </div>
@@ -724,6 +724,54 @@
     <div class="vl-band">
       <div class="vl-band__num">II</div>
       <div class="vl-band__title">From demo to dependable</div>
+    </div>
+  </section>
+
+  <!-- ============================ 11b · DECISIONS ============================ -->
+  <section class="vl-section" id="decisions">
+    <h2>Decisions</h2>
+    <div class="vl-prose">
+      <p>An issue-by-issue review walkthrough that prints. Wrap the page part in any element with
+        <code>data-vl-form="id"</code>; each issue is a <code>.vl-decision</code> with a head, a two-block
+        <code>__grid</code> (what it is / why it matters) and a <code>fieldset.vl-choices</code> of
+        <code>label.vl-choice</code> cards around native radios (<code>--rec</code> = recommended,
+        <code>--own</code> = "my own solution", paired with a <code>.vl-field</code>). Choosing works
+        without script; <code>layout.js</code> adds save/restore, a decided counter, copy / download as
+        Markdown, print and reset. Print keeps every option and labels the chosen one.</p>
+    </div>
+    <div data-vl-form="sg-demo" data-vl-title="Style guide demo decisions" data-vl-file="sg-demo-decisions">
+      <article class="vl-decision" id="d-demo">
+        <div class="vl-decision__head">
+          <span class="vl-decision__num">1</span>
+          <h3 class="vl-decision__title">Slide title overstates the result</h3>
+          <span class="vl-decision__status"><span class="vl-decision__open">Open</span><span class="vl-decision__done">Decided</span></span>
+        </div>
+        <div class="vl-decision__grid">
+          <div><span class="vl-decision__label">What it is</span><p>The title claims profit; the body says break-even for the first batch.</p></div>
+          <div><span class="vl-decision__label">Why it matters</span><p>A reader who spots one over-claim discounts every other number.</p></div>
+        </div>
+        <fieldset class="vl-choices">
+          <legend>Options</legend>
+          <label class="vl-choice"><input type="radio" name="sg-d1" value="a"><span class="vl-choice__title"><span class="vl-choice__key">A</span>Qualify the title</span><span class="vl-choice__body">Keeps the claim, adds the volume it holds at.</span></label>
+          <label class="vl-choice vl-choice--rec"><input type="radio" name="sg-d1" value="b"><span class="vl-choice__title"><span class="vl-choice__key">B</span>Match the title to the body<span class="vl-choice__badge">Recommended</span></span><span class="vl-choice__body">Nothing for a reader to catch.</span></label>
+          <label class="vl-choice"><input type="radio" name="sg-d1" value="c"><span class="vl-choice__title"><span class="vl-choice__key">C</span>Keep it</span><span class="vl-choice__body">Fastest; leaves the gap.</span></label>
+          <label class="vl-choice vl-choice--own"><input type="radio" name="sg-d1" value="own"><span class="vl-choice__title"><span class="vl-choice__key">D</span>My own solution</span><span class="vl-choice__body">Type it below; typing selects this option if nothing else is chosen.</span></label>
+          <div class="vl-field"><label class="vl-field__label" for="sg-d1-note">Your solution, or a note on your choice</label><textarea class="vl-field__input" id="sg-d1-note" name="sg-d1-note" rows="2" placeholder="Your solution or a note"></textarea><div class="vl-field__print"></div></div>
+        </fieldset>
+      </article>
+      <fieldset class="vl-choices vl-mt-6">
+        <legend>Checklist</legend>
+        <label class="vl-choice"><input type="checkbox" name="sg-c1"><span class="vl-choice__title">Receipt in hand</span></label>
+        <label class="vl-choice"><input type="checkbox" name="sg-c2"><span class="vl-choice__title">Dates filled</span></label>
+      </fieldset>
+      <div class="vl-actions vl-mt-6">
+        <button class="vl-btn vl-btn--solid vl-btn--sm" type="button" data-vl-action="copy">Copy decisions</button>
+        <button class="vl-btn vl-btn--ghost vl-btn--sm" type="button" data-vl-action="download">Download .md</button>
+        <button class="vl-btn vl-btn--ghost vl-btn--sm" type="button" data-vl-action="print">Print / PDF</button>
+        <button class="vl-btn vl-btn--ghost vl-btn--sm" type="button" data-vl-action="reset">Reset</button>
+        <span class="vl-actions__status" data-vl-status></span>
+      </div>
+      <div class="vl-field vl-field--export" hidden><label class="vl-field__label" for="sg-out">Export</label><textarea class="vl-field__input" id="sg-out" rows="6" readonly data-vl-export-out></textarea></div>
     </div>
   </section>
 

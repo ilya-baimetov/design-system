@@ -1189,6 +1189,184 @@ table.vl-table--compact thead th{font-size:11px}
   letter-spacing:.08em; font-size:10.5px; line-height:1;
 }
 
+/* ============================================================
+   21. DECISIONS — an interactive review walkthrough that prints.
+   One issue per .vl-decision:
+     .vl-decision__head  (__num, __title, __status > __open / __done)
+     .vl-decision__grid  (two short blocks: what it is / why it matters;
+                          label each with .vl-decision__label)
+     fieldset.vl-choices > label.vl-choice (native radio or checkbox first,
+       then __title [+ __key letter, + __badge "Recommended"], then __body)
+     .vl-choice--rec     the recommended option (add a __badge inside __title)
+     .vl-choice--own     the "my own solution" option; pair it with a .vl-field
+     .vl-field > __label + textarea.vl-field__input + div.vl-field__print
+   Checked state uses :has(), so choosing works without script.
+   layout.js, for any [data-vl-form] container: saves and restores
+   answers per page (localStorage), auto-selects --own when its field
+   gets text while nothing else is chosen, fills [data-vl-count] ("4 of 9 decided"), mirrors notes
+   into .vl-field__print, and wires buttons
+   [data-vl-action="copy|download|print|reset"] inside .vl-actions
+   (export text also lands in textarea[data-vl-export-out]).
+   Print: every option prints; the chosen one keeps its outline and a
+   "Chosen" label; notes print in full; .vl-actions is hidden.
+   ============================================================ */
+.vl-decision{
+  border-top:3px solid var(--vl-text);
+  padding-top:var(--vl-space-4);
+  margin:var(--vl-space-7) 0 0;
+  scroll-margin-top:24px;
+}
+.vl-decision__head{
+  display:flex; align-items:baseline; flex-wrap:wrap;
+  gap:var(--vl-space-2) var(--vl-space-3);
+  margin-bottom:var(--vl-space-4);
+}
+.vl-decision__num{
+  font-family:var(--vl-font-display); font-weight:600;
+  font-size:30px; line-height:1; color:var(--vl-brand);
+}
+.vl-decision__title{
+  flex:1 1 18em; margin:0;
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.02em;
+  font-size:22px; line-height:1.15; color:var(--vl-text);
+}
+.vl-decision__status{
+  font-family:var(--vl-font-mono); font-size:11px; line-height:1;
+  text-transform:uppercase; letter-spacing:.06em;
+  padding:4px 8px; border-radius:var(--vl-radius-sm);
+  border:1px solid var(--vl-border-strong); color:var(--vl-text-muted);
+}
+.vl-decision__done{display:none}
+.vl-decision:has(.vl-choice > input:checked) .vl-decision__status{
+  border-color:var(--vl-brand); background:var(--vl-brand-soft); color:var(--vl-brand-text);
+}
+.vl-decision:has(.vl-choice > input:checked) .vl-decision__open{display:none}
+.vl-decision:has(.vl-choice > input:checked) .vl-decision__done{display:inline}
+.vl-decision__grid{
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--vl-space-3) var(--vl-space-5);
+  margin-bottom:var(--vl-space-4);
+}
+.vl-decision__label{
+  display:block; margin-bottom:var(--vl-space-1);
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  font-size:11.5px; line-height:1.2; color:var(--vl-text-muted);
+}
+.vl-decision__grid p{margin:0; font-size:15px; line-height:1.55; color:var(--vl-text-2)}
+@media (max-width:720px){
+  .vl-decision__grid{grid-template-columns:1fr}
+}
+
+/* ---- choices: option cards around a native radio / checkbox ---- */
+.vl-choices{display:grid; gap:var(--vl-space-2); margin:0; padding:0; border:0; min-width:0}
+.vl-choices > legend{
+  padding:0; margin-bottom:var(--vl-space-2);
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  font-size:11.5px; color:var(--vl-text-muted);
+}
+.vl-choice{
+  position:relative;
+  display:grid; grid-template-columns:auto minmax(0,1fr);
+  column-gap:var(--vl-space-3); align-items:start;
+  padding:var(--vl-space-3) var(--vl-space-4);
+  border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius);
+  background:var(--vl-surface); cursor:pointer;
+  transition:border-color .15s ease, background-color .15s ease;
+}
+.vl-choice:hover{border-color:var(--vl-text-faint)}
+.vl-choice > input{
+  grid-row:1 / span 2; width:18px; height:18px; margin:2px 0 0;
+  accent-color:var(--vl-brand-strong); cursor:pointer;
+}
+.vl-choice:has(> input:focus-visible){box-shadow:var(--vl-ring)}
+.vl-choice:has(> input:checked){
+  border-color:var(--vl-brand);
+  background:var(--vl-brand-soft);
+  box-shadow:inset 4px 0 0 var(--vl-brand);
+}
+.vl-choice:has(> input:checked):has(> input:focus-visible){box-shadow:inset 4px 0 0 var(--vl-brand), var(--vl-ring)}
+.vl-choice__title{font-weight:600; font-size:15.5px; line-height:1.4; color:var(--vl-text)}
+.vl-choice__key{
+  font-family:var(--vl-font-mono); font-weight:500; font-size:.86em;
+  color:var(--vl-text-muted); margin-right:var(--vl-space-2);
+}
+.vl-choice__badge{
+  display:inline-block; vertical-align:2px; margin-left:var(--vl-space-2);
+  padding:3px 7px; border-radius:var(--vl-radius-sm);
+  background:var(--vl-brand-strong); color:var(--vl-on-brand);
+  font-family:var(--vl-font-display); font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  font-size:10.5px; line-height:1;
+}
+.vl-choice__body{
+  grid-column:2; margin-top:2px;
+  font-size:14px; line-height:1.5; color:var(--vl-text-muted);
+}
+.vl-choice:has(> input:checked) .vl-choice__body{color:var(--vl-text-2)}
+.vl-choice--own .vl-choice__title{font-style:italic}
+
+/* ---- free-text field ---- */
+.vl-field{display:block; margin-top:var(--vl-space-2)}
+.vl-field__label{
+  display:block; margin-bottom:var(--vl-space-1);
+  font-weight:600; font-size:13px; color:var(--vl-text-2);
+}
+.vl-field__input{
+  display:block; width:100%; box-sizing:border-box;
+  min-height:4.8em; padding:var(--vl-space-2) var(--vl-space-3);
+  font-family:var(--vl-font-sans); font-size:14.5px; line-height:1.5;
+  color:var(--vl-text); background:var(--vl-surface);
+  border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius);
+  resize:vertical; field-sizing:content;
+}
+.vl-field__input::placeholder{color:var(--vl-text-faint)}
+.vl-field__input:focus-visible{outline:0; border-color:var(--vl-brand); box-shadow:var(--vl-ring)}
+.vl-field__input[readonly]{background:var(--vl-surface-2); font-family:var(--vl-font-mono); font-size:12.5px}
+.vl-field__print{display:none; white-space:pre-wrap}
+.vl-field--export{margin-top:var(--vl-space-3)}
+
+/* ---- action bar (buttons + live status) ---- */
+.vl-actions{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--vl-space-2);
+  padding:var(--vl-space-3) var(--vl-space-4);
+  background:var(--vl-surface-2);
+  border:1px solid var(--vl-border); border-radius:var(--vl-radius);
+}
+.vl-actions--sticky{position:sticky; bottom:var(--vl-space-3); z-index:5; box-shadow:var(--vl-shadow)}
+.vl-actions__status{
+  margin-left:auto; font-family:var(--vl-font-mono); font-size:12.5px;
+  color:var(--vl-text-muted); font-variant-numeric:tabular-nums;
+}
+@media (max-width:560px){
+  .vl-actions__status{margin-left:0; flex-basis:100%}
+}
+
+@media print{
+  .vl-actions,.vl-actions--sticky{display:none}
+  .vl-decision{margin-top:var(--vl-space-5); padding-top:var(--vl-space-3)}
+  .vl-decision__head,.vl-decision__grid{break-inside:avoid; break-after:avoid}
+  .vl-choice{break-inside:avoid; padding:var(--vl-space-2) var(--vl-space-3)}
+  .vl-choice:not(:has(> input:checked)){background:transparent}
+  .vl-choice:has(> input:checked)::after{
+    content:"Chosen"; position:absolute; top:var(--vl-space-2); right:var(--vl-space-3);
+    font-family:var(--vl-font-mono); font-size:9pt; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--vl-brand-text);
+  }
+  .vl-choice:has(> input[type=checkbox]:checked)::after{content:"Done"}
+  .vl-field{break-inside:avoid}
+  .vl-field__input{display:none}
+  .vl-field__print{
+    display:block; min-height:2.2em; padding:6pt 8pt;
+    border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius);
+    font-size:10pt; line-height:1.45; color:var(--vl-text);
+  }
+  .vl-field__print:empty::before{content:"(blank)"; color:var(--vl-text-faint)}
+  .vl-field--export{display:none}
+}
+
 
 /* ===================== layout.css ===================== */
 /* ============================================================

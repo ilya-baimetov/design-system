@@ -80,3 +80,208 @@
     onScroll();
   });
 })();
+
+/* ============================================================
+   Decisions (components.css §21): for every [data-vl-form] container
+   save/restore answers per page, auto-select the --own option when
+   its note gets text and nothing else is chosen, count decided issues, mirror notes for print,
+   and wire [data-vl-action="copy|download|print|reset"] buttons.
+   Storage and clipboard are best-effort: every call is guarded.
+   ============================================================ */
+(function () {
+  "use strict";
+  var doc = document;
+
+  function onReady(fn) {
+    if (doc.readyState !== "loading") fn();
+    else doc.addEventListener("DOMContentLoaded", fn);
+  }
+  function txt(el) {
+    if (!el) return "";
+    var c = el.cloneNode(true);
+    var drop = c.querySelectorAll(".vl-choice__badge, .vl-choice__key");
+    for (var i = 0; i < drop.length; i++) drop[i].parentNode.removeChild(drop[i]);
+    return c.textContent.replace(/\s+/g, " ").trim();
+  }
+
+  function initForm(form) {
+    var id = form.getAttribute("data-vl-form") || "form";
+    var key = "vl-form:" + location.pathname + ":" + id;
+    var fields = form.querySelectorAll("input[name], textarea[name]");
+    var statusEl = form.querySelector("[data-vl-status]");
+    var out = form.querySelector("textarea[data-vl-export-out]");
+    var statusTimer = null;
+
+    function mirror(t) {
+      var p = t.parentNode && t.parentNode.querySelector(".vl-field__print");
+      if (p) p.textContent = t.value;
+    }
+    function mirrorAll() {
+      var ts = form.querySelectorAll("textarea.vl-field__input");
+      for (var i = 0; i < ts.length; i++) mirror(ts[i]);
+    }
+    function say(msg) {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      if (statusTimer) clearTimeout(statusTimer);
+      statusTimer = setTimeout(count, 4000);
+    }
+    function count() {
+      var ds = form.querySelectorAll(".vl-decision"), n = 0;
+      for (var i = 0; i < ds.length; i++) if (ds[i].querySelector(".vl-choice > input:checked")) n++;
+      var msg = n + " of " + ds.length + " decided";
+      var cs = doc.querySelectorAll("[data-vl-count]");
+      for (var j = 0; j < cs.length; j++) cs[j].textContent = msg;
+      if (statusEl && !statusEl.hasAttribute("data-vl-count")) statusEl.textContent = msg;
+    }
+    function save() {
+      var data = {};
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        if (f.hasAttribute("data-vl-export-out")) continue;
+        if (f.type === "radio") { if (f.checked) data[f.name] = f.value; }
+        else if (f.type === "checkbox") data[f.name] = f.checked;
+        else data[f.name] = f.value;
+      }
+      try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
+    }
+    function restore() {
+      var data = null;
+      try { data = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
+      if (!data) return;
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        if (!(f.name in data)) continue;
+        if (f.type === "radio") f.checked = data[f.name] === f.value;
+        else if (f.type === "checkbox") f.checked = !!data[f.name];
+        else f.value = data[f.name];
+      }
+    }
+    function exportText() {
+      var title = form.getAttribute("data-vl-title") || doc.title;
+      var lines = ["# " + title, "", "Exported " + new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC"];
+      var ds = form.querySelectorAll(".vl-decision"), done = 0;
+      for (var i = 0; i < ds.length; i++) if (ds[i].querySelector(".vl-choice > input:checked")) done++;
+      lines.push(done + " of " + ds.length + " decided", "");
+      for (var k = 0; k < ds.length; k++) {
+        var d = ds[k];
+        var num = txt(d.querySelector(".vl-decision__num"));
+        lines.push("## " + (num ? num + ". " : "") + txt(d.querySelector(".vl-decision__title")));
+        var c = d.querySelector(".vl-choice > input:checked");
+        if (c) {
+          var lab = c.parentNode;
+          var keyEl = lab.querySelector(".vl-choice__key");
+          var keyTxt = keyEl ? keyEl.textContent.trim() + " " : "";
+          lines.push("Choice: " + keyTxt + txt(lab.querySelector(".vl-choice__title")) +
+            (lab.classList.contains("vl-choice--rec") ? " (recommended)" : ""));
+        } else {
+          lines.push("Choice: (open)");
+        }
+        var note = d.querySelector("textarea.vl-field__input");
+        if (note && note.value.trim()) lines.push("Note: " + note.value.trim().replace(/\n+/g, " / "));
+        lines.push("");
+      }
+      var groups = form.querySelectorAll("fieldset.vl-choices");
+      for (var g = 0; g < groups.length; g++) {
+        var fs = groups[g];
+        if (fs.closest(".vl-decision")) continue;
+        var boxes = fs.querySelectorAll(".vl-choice > input[type=checkbox]");
+        if (!boxes.length) continue;
+        lines.push("## " + (txt(fs.querySelector("legend")) || "Checklist"));
+        for (var b = 0; b < boxes.length; b++) {
+          lines.push("- [" + (boxes[b].checked ? "x" : " ") + "] " + txt(boxes[b].parentNode.querySelector(".vl-choice__title")));
+        }
+        lines.push("");
+      }
+      return lines.join("\n");
+    }
+    function showOut(text) {
+      if (!out) return;
+      out.value = text;
+      var wrap = out.closest("[hidden]");
+      if (wrap) wrap.hidden = false;
+    }
+    function copy() {
+      var text = exportText();
+      showOut(text);
+      function fallback() {
+        if (!out) { say("Copy blocked here"); return; }
+        try {
+          out.focus(); out.select();
+          var ok = doc.execCommand && doc.execCommand("copy");
+          say(ok ? "Copied to clipboard" : "Copy blocked here: select the text below");
+        } catch (e) { say("Copy blocked here: select the text below"); }
+      }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { say("Copied to clipboard"); }, fallback);
+        } else fallback();
+      } catch (e) { fallback(); }
+    }
+    function download() {
+      var text = exportText();
+      showOut(text);
+      try {
+        var blob = new Blob([text], { type: "text/markdown;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = doc.createElement("a");
+        a.href = url; a.download = (form.getAttribute("data-vl-file") || id) + ".md";
+        doc.body.appendChild(a); a.click(); doc.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+        say("Downloaded " + a.download);
+      } catch (e) { say("Download blocked here: copy the text below"); }
+    }
+    function reset(btn) {
+      if (btn.getAttribute("data-vl-armed") !== "1") {
+        btn.setAttribute("data-vl-armed", "1");
+        btn.setAttribute("data-vl-label", btn.textContent);
+        btn.textContent = "Click again to clear";
+        setTimeout(function () {
+          if (btn.getAttribute("data-vl-armed") === "1") {
+            btn.removeAttribute("data-vl-armed");
+            btn.textContent = btn.getAttribute("data-vl-label");
+          }
+        }, 3500);
+        return;
+      }
+      btn.removeAttribute("data-vl-armed");
+      btn.textContent = btn.getAttribute("data-vl-label");
+      for (var i = 0; i < fields.length; i++) {
+        var f = fields[i];
+        if (f.type === "radio" || f.type === "checkbox") f.checked = false;
+        else f.value = "";
+      }
+      try { localStorage.removeItem(key); } catch (e) {}
+      mirrorAll(); count(); say("Cleared");
+    }
+
+    form.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t.tagName === "TEXTAREA" && !t.hasAttribute("data-vl-export-out")) {
+        mirror(t);
+        var d = t.closest(".vl-decision");
+        var own = d && d.querySelector(".vl-choice--own > input");
+        if (own && t.value.trim() && !d.querySelector(".vl-choice > input:checked")) own.checked = true;
+      }
+      save(); count();
+    });
+    form.addEventListener("change", function () { save(); count(); });
+    form.addEventListener("click", function (e) {
+      var btn = e.target.closest && e.target.closest("[data-vl-action]");
+      if (!btn || !form.contains(btn)) return;
+      var act = btn.getAttribute("data-vl-action");
+      if (act === "copy") copy();
+      else if (act === "download") download();
+      else if (act === "print") { mirrorAll(); window.print(); }
+      else if (act === "reset") reset(btn);
+    });
+    window.addEventListener("beforeprint", mirrorAll);
+
+    restore(); mirrorAll(); count();
+  }
+
+  onReady(function () {
+    var forms = doc.querySelectorAll("[data-vl-form]");
+    for (var i = 0; i < forms.length; i++) initForm(forms[i]);
+  });
+})();
