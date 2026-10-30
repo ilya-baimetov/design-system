@@ -418,6 +418,7 @@
    <section class="vl-slide vl-slide--present vl-slide--wide"> ...          */
 .vl-slide--present{
   --vl-present-zoom:1.8;
+  justify-content:flex-start;   /* titles sit on one top line from slide to slide */
   padding-top:clamp(28px,3vw,44px);
   padding-bottom:clamp(64px,6.6vw,96px);
   gap:var(--vl-space-3);
@@ -425,6 +426,7 @@
 .vl-slide--present .vl-slide__kicker{font-size:clamp(13px,1.4vw,20px)}
 .vl-slide--present .vl-slide__title{font-size:clamp(36px,5vw,72px); line-height:1.02}
 .vl-slide--present.vl-slide--title .vl-slide__title{font-size:clamp(44px,6vw,86px); line-height:1.1}
+.vl-slide--present.vl-slide--title{justify-content:center}
 .vl-slide--present .vl-slide__lead{font-size:clamp(22px,2.8vw,40px); line-height:1.25; max-width:none}
 .vl-slide--present .vl-slide__body,
 .vl-slide--present .vl-slide__list{font-size:clamp(20px,2.5vw,36px); line-height:1.3}
