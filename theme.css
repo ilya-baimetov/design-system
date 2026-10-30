@@ -1188,6 +1188,11 @@ table.vl-table--compact thead th{font-size:11px}
   font-family:var(--vl-font-display); font-weight:600; text-transform:uppercase;
   letter-spacing:.08em; font-size:10.5px; line-height:1;
 }
+/* print: keep figures, table rows, callouts and stat rows whole; never strand a heading */
+@media print{
+  .vl-figure,.vl-callout,.vl-stats,table.vl-table tr,.vl-prose table tr{break-inside:avoid}
+  .vl-prose :is(h2,h3,h4){break-after:avoid}
+}
 
 /* ============================================================
    21. DECISIONS — an interactive review walkthrough that prints.
@@ -1342,13 +1347,23 @@ table.vl-table--compact thead th{font-size:11px}
 }
 @media (max-width:560px){
   .vl-actions__status{margin-left:0; flex-basis:100%}
+  .vl-actions--sticky{position:static; box-shadow:none}   /* a pinned bar would cover a fifth of a phone screen */
 }
 
 @media print{
   .vl-actions,.vl-actions--sticky{display:none}
-  .vl-decision{margin-top:var(--vl-space-5); padding-top:var(--vl-space-3)}
+  .vl-decision{margin-top:var(--vl-space-5); padding-top:var(--vl-space-3); border-top-width:2px}
+  .vl-decision__head{margin-bottom:var(--vl-space-2)}
+  .vl-decision__num{font-size:20pt}
+  .vl-decision__title{font-size:14pt}
   .vl-decision__head,.vl-decision__grid{break-inside:avoid; break-after:avoid}
-  .vl-choice{break-inside:avoid; padding:var(--vl-space-2) var(--vl-space-3)}
+  .vl-decision__grid{grid-template-columns:repeat(2,minmax(0,1fr)); margin-bottom:var(--vl-space-2)}
+  .vl-decision__grid p{font-size:9.5pt; line-height:1.45}
+  .vl-choices{gap:var(--vl-space-1)}
+  .vl-choice{break-inside:avoid; padding:var(--vl-space-1) var(--vl-space-3)}
+  .vl-choice__title{font-size:10pt}
+  .vl-choice__body{font-size:9pt; line-height:1.4}
+  .vl-choice--own .vl-choice__body{display:none}   /* typing instructions mean nothing on paper */
   .vl-choice:not(:has(> input:checked)){background:transparent}
   .vl-choice:has(> input:checked)::after{
     content:"Chosen"; position:absolute; top:var(--vl-space-2); right:var(--vl-space-3);
@@ -1358,8 +1373,9 @@ table.vl-table--compact thead th{font-size:11px}
   .vl-choice:has(> input[type=checkbox]:checked)::after{content:"Done"}
   .vl-field{break-inside:avoid}
   .vl-field__input{display:none}
+  .vl-field__label{font-size:9pt}
   .vl-field__print{
-    display:block; min-height:2.2em; padding:6pt 8pt;
+    display:block; min-height:2.2em; padding:4pt 8pt;
     border:1px solid var(--vl-border-strong); border-radius:var(--vl-radius);
     font-size:10pt; line-height:1.45; color:var(--vl-text);
   }
