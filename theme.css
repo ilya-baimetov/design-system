@@ -2042,6 +2042,11 @@ table.vl-table--compact thead th{font-size:11px}
 .vl-slide--present :is(.vl-figure,.vl-card,.vl-quote,.vl-stats,.vl-tags,.vl-meta,.vl-callout,.vl-table-wrap,.vl-steps,.vl-timeline,.vl-chart,.vl-stackbar,.vl-quad,.vl-legend):not(:is(.vl-figure,.vl-card,.vl-callout,.vl-quote,.vl-stats,.vl-steps) *){zoom:var(--vl-present-zoom)}
 .vl-slide--present .vl-slide__source{font-size:16px}
 .vl-slide--present .vl-figure img{display:block; width:100%; height:auto}
+/* no box-in-box on presentation slides: figures drop their panel chrome */
+.vl-slide--present .vl-figure{background:transparent; border:0; border-radius:0; box-shadow:none; margin:0}
+.vl-slide--present .vl-figure__head{background:transparent; border-bottom:0; padding:0 0 var(--vl-space-2)}
+.vl-slide--present .vl-figure__body{background:transparent; padding:0}
+.vl-slide--present .vl-figure figcaption{background:transparent; border-top:0; padding:var(--vl-space-2) 0 0}
 @media (max-width:720px){.vl-slide--present{--vl-present-zoom:1}}
 
 /* ---------------- Weighted columns ---------------- */
