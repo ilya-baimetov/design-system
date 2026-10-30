@@ -81,6 +81,8 @@ Inline SVGs use short class names **scoped inside `.vl-figure`** (collision-safe
 
 Arrow keys / space navigate, **F** fullscreen, **D** theme; **print → PDF** gives one slide per page. Slide variants: `--title --section --two --quote --image --center --dark --end`. See `slides-demo.html`.
 
+Pitch additions: `--dense` (assertion + evidence, backup slides), `--wide` (full-width visuals), and `--present` (presentation scale: titles 72 px, lead 40 px, body 36 px, components scaled by `--vl-present-zoom`, default 1.8, so chart, table and stat labels stay at about 24–28 px on a 1440×900 slide; keep these slides to one idea and roughly 25 words). See `#dense` and `#present` in `slides-demo.html`.
+
 ## Component cheat-sheet
 
 - **Buttons:** `.vl-btn` + `--solid` / `--ghost` / `--ink` / `--sm` / `--lg`

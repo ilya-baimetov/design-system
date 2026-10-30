@@ -2016,6 +2016,32 @@ table.vl-table--compact thead th{font-size:11px}
 /* ---------------- Wide: lift the 880px reading cap for visuals ---------------- */
 .vl-slide--wide{--vl-maxw:100%}
 
+/* ---------------- Present: presentation-scale pitch slides ----------------
+   For pitch slides shown on a screen or read as a PDF on a phone. Type scale
+   follows published pitch guidance converted to a 1440x900 slide (Kawasaki
+   30 pt, DocSend 24 pt body): titles 72 px, lead 40 px, body 36 px, and every
+   component scaled by --vl-present-zoom (default 1.8; CSS zoom keeps widths
+   fluid) so chart, table, steps and stat labels land at about 24-28 px. Keep these slides to
+   one idea and roughly 25 words; detail goes on --dense backup slides.
+   Override per slide: style="--vl-present-zoom:1.6".
+   <section class="vl-slide vl-slide--present vl-slide--wide"> ...          */
+.vl-slide--present{
+  --vl-present-zoom:1.8;
+  padding-top:clamp(28px,3vw,44px);
+  padding-bottom:clamp(64px,6.6vw,96px);
+  gap:var(--vl-space-3);
+}
+.vl-slide--present .vl-slide__kicker{font-size:clamp(13px,1.4vw,20px)}
+.vl-slide--present .vl-slide__title{font-size:clamp(36px,5vw,72px); line-height:1.02}
+.vl-slide--present.vl-slide--title .vl-slide__title{font-size:clamp(44px,6vw,86px); line-height:1.1}
+.vl-slide--present .vl-slide__lead{font-size:clamp(22px,2.8vw,40px); line-height:1.25; max-width:none}
+.vl-slide--present .vl-slide__body,
+.vl-slide--present .vl-slide__list{font-size:clamp(20px,2.5vw,36px); line-height:1.3}
+.vl-slide--present :is(.vl-figure,.vl-card,.vl-quote,.vl-stats,.vl-tags,.vl-meta,.vl-callout,.vl-table-wrap,.vl-steps,.vl-timeline,.vl-chart,.vl-stackbar,.vl-quad,.vl-legend):not(:is(.vl-figure,.vl-card,.vl-callout,.vl-quote,.vl-stats,.vl-steps) *){zoom:var(--vl-present-zoom)}
+.vl-slide--present .vl-slide__source{font-size:16px}
+.vl-slide--present .vl-figure img{display:block; width:100%; height:auto}
+@media (max-width:720px){.vl-slide--present{--vl-present-zoom:1}}
+
 /* ---------------- Weighted columns ---------------- */
 .vl-slide__cols--3-2{grid-template-columns:3fr 2fr}
 .vl-slide__cols--2-3{grid-template-columns:2fr 3fr}
@@ -2043,6 +2069,7 @@ table.vl-table--compact thead th{font-size:11px}
     padding-bottom:calc(var(--vl-notes-h) + clamp(40px,7vw,100px));
   }
   .vl-deck--handout .vl-slide--dense{padding-bottom:calc(var(--vl-notes-h) + clamp(64px,6.6vw,96px))}
+  .vl-deck--handout .vl-slide--present{padding-bottom:calc(var(--vl-notes-h) + clamp(64px,6.6vw,96px))}
   .vl-deck--handout .vl-slide__footer{bottom:var(--vl-notes-h)}
   .vl-deck--handout .vl-slide__notes{
     display:block; position:absolute; left:0; right:0; bottom:0;
