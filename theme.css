@@ -2142,24 +2142,33 @@ table.vl-table--compact thead th{font-size:11px}
      <button class="vl-deck__ctl" type="button" data-vl-deck="prev" aria-label="Previous slide">&lsaquo;</button>
      <span class="vl-deck__count" data-vl-deck-count></span>
      <button class="vl-deck__ctl" type="button" data-vl-deck="next" aria-label="Next slide">&rsaquo;</button>
-     <button class="vl-deck__ctl" type="button" data-vl-deck="notes" aria-pressed="true">Notes in PDF</button>
-     <button class="vl-deck__ctl" type="button" data-vl-deck="present">Present</button>
-     <button class="vl-deck__ctl vl-deck__ctl--solid" type="button" data-vl-deck="print">Print / PDF</button>
+     <span class="vl-deck__tools">
+       <button class="vl-deck__ctl" type="button" data-vl-deck="notes" aria-pressed="true">Notes in PDF</button>
+       <button class="vl-deck__ctl" type="button" data-vl-deck="present">Present</button>
+       <button class="vl-deck__ctl vl-deck__ctl--solid" type="button" data-vl-deck="print">Print / PDF</button>
+     </span>
    </nav>
+   The count is part-aware: put data-vl-part="Backup" on the slide that starts
+   a part (add data-vl-nocount to a divider you don't want counted). It then
+   reads "3 / 11 +17 backup" in the main part and "BACKUP 4 / 17" after.
    Optional: data-vl-deck="theme" toggles light/dark.
    slides.js wires the buttons. "notes" toggles .vl-deck--handout (PDF page
    1440x1080 with the note band, or 1440x900 slides only). The bar sits
    outside .vl-deck, so it disappears in Present (full screen) and in print.
-   It stays faint until hovered or focused, so it doesn't compete with a slide. */
+   The tools stay faint until hovered or focused; prev / count / next stay legible. */
 .vl-deck__bar{
   position:fixed; z-index:70;
   top:clamp(10px,1.4vw,18px); right:clamp(10px,1.4vw,18px);
   display:flex; align-items:center; gap:2px; padding:3px;
   background:var(--vl-surface); border:1px solid var(--vl-border-strong);
   border-radius:var(--vl-radius); box-shadow:var(--vl-shadow-sm);
+}
+.vl-deck__tools{
+  display:flex; align-items:center; gap:2px;
+  margin-left:2px; padding-left:4px; border-left:1px solid var(--vl-border);
   opacity:.45; transition:opacity .2s ease;
 }
-.vl-deck__bar:hover,.vl-deck__bar:focus-within{opacity:1}
+.vl-deck__bar:hover .vl-deck__tools,.vl-deck__bar:focus-within .vl-deck__tools{opacity:1}
 .vl-deck__ctl{
   display:inline-flex; align-items:center; justify-content:center; min-width:30px;
   padding:6px 10px; border:0; border-radius:var(--vl-radius-sm);
@@ -2169,17 +2178,26 @@ table.vl-table--compact thead th{font-size:11px}
 }
 .vl-deck__ctl[data-vl-deck="prev"],.vl-deck__ctl[data-vl-deck="next"]{font-size:18px; padding:3px 8px}
 .vl-deck__ctl:hover{background:var(--vl-surface-3)}
+.vl-deck__ctl:disabled{opacity:.3; cursor:default; background:transparent}
 .vl-deck__ctl:focus-visible{outline:0; box-shadow:var(--vl-ring)}
 .vl-deck__ctl[aria-pressed="true"]{background:var(--vl-brand-soft); color:var(--vl-brand-text)}
 .vl-deck__ctl--solid{background:var(--vl-brand-strong); color:var(--vl-on-brand)}
 .vl-deck__ctl--solid:hover{background:var(--vl-brand-strong); filter:brightness(1.08)}
 .vl-deck__count{
-  min-width:4.6em; text-align:center; font-family:var(--vl-font-mono); font-size:12px;
+  min-width:5.5em; padding:0 4px; text-align:center; white-space:nowrap;
+  font-family:var(--vl-font-mono); font-size:13px;
   color:var(--vl-text-muted); font-variant-numeric:tabular-nums;
 }
+.vl-deck__count b{font-weight:600; color:var(--vl-text)}
+.vl-deck__part{
+  margin-right:6px; font-family:var(--vl-font-display); font-weight:600;
+  font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--vl-brand-text);
+}
+.vl-deck__more{margin-left:8px; font-size:11px; color:var(--vl-text-faint)}
 @media (max-width:720px){
-  .vl-deck__bar{top:auto; bottom:10px; left:10px; right:10px; justify-content:space-between; opacity:1}
-  .vl-deck__ctl[data-vl-deck="present"]{display:none}
+  .vl-deck__bar{top:auto; bottom:10px; left:10px; right:10px; justify-content:space-between}
+  .vl-deck__tools{opacity:1}
+  .vl-deck__ctl:is([data-vl-deck="present"],[data-vl-deck="notes"],[data-vl-deck="theme"]){display:none}
 }
 @media print{
   .vl-deck__bar{display:none}
@@ -2188,6 +2206,20 @@ table.vl-table--compact thead th{font-size:11px}
 /* ---------------- Responsive: collapse two-col on small screens ---------------- */
 @media (max-width:720px){
   .vl-slide__cols{grid-template-columns:1fr; gap:clamp(18px,5vw,28px)}
+}
+
+/* ---------------- Paged: one slide at a time, no scrolling ----------------
+   .vl-deck--paged: slides.js shows only the .is-current slide (and marks the
+   deck .is-ready, so without script the deck still scrolls). Arrows, keys,
+   swipe and the control bar move between slides; #n in the URL keeps the
+   place on reload. A slide taller than the screen (phones) scrolls on its
+   own. Print shows every slide. */
+.vl-deck--paged{scroll-snap-type:none; scroll-behavior:auto}
+.vl-deck--paged > .vl-slide{scroll-snap-align:none}
+.vl-deck--paged.is-ready > .vl-slide{border-bottom:0}
+.vl-deck--paged.is-ready > .vl-slide:not(.is-current){display:none}
+@media print{
+  .vl-deck--paged.is-ready > .vl-slide:not(.is-current){display:flex}
 }
 
 /* ---------------- Reduced motion ---------------- */

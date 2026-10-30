@@ -30,12 +30,14 @@
 <!-- Floating theme toggle -->
 <nav class="vl-deck__bar" aria-label="Deck controls">
   <button class="vl-deck__ctl" type="button" data-vl-deck="prev" aria-label="Previous slide">&lsaquo;</button>
-  <span class="vl-deck__count" data-vl-deck-count></span>
+  <span class="vl-deck__count" data-vl-deck-count aria-live="polite"></span>
   <button class="vl-deck__ctl" type="button" data-vl-deck="next" aria-label="Next slide">&rsaquo;</button>
+  <span class="vl-deck__tools">
   <button class="vl-deck__ctl" type="button" data-vl-deck="notes" aria-pressed="false">Notes in PDF</button>
   <button class="vl-deck__ctl" type="button" data-vl-deck="theme">Theme</button>
   <button class="vl-deck__ctl" type="button" data-vl-deck="present">Present</button>
   <button class="vl-deck__ctl vl-deck__ctl--solid" type="button" data-vl-deck="print">Print / PDF</button>
+  </span>
 </nav>
 
 <div class="vl-deck">

@@ -2,7 +2,9 @@
    VibeLoom UI — slides.js
    Dependency-free deck controller: theme init/toggle, keyboard
    navigation, progress bar, per-slide "n / total" page numbers, and
-   the optional control bar (prev / next / notes in PDF / present / print).
+   the optional control bar (prev / next / notes in PDF / present / print),
+   part-aware counts (main deck vs backup) and a paged mode (.vl-deck--paged)
+   that swaps slides instead of scrolling.
    Defensive: every lookup is guarded so it never throws if a
    deck (or element) is absent on the page.
    ============================================================ */
@@ -38,21 +40,77 @@
       for (var n = 0; n < own.length; n++) own[n].textContent = (idx + 1) + " / " + total;
     });
     var current = 0;
+    var paged = deck.classList.contains("vl-deck--paged");
 
-    function go(i) {
-      i = Math.max(0, Math.min(total - 1, i));
-      if (slides[i]) slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+    /* Parts: data-vl-part="Backup" on a slide starts a part; data-vl-nocount
+       leaves a divider out of its part's count. */
+    var parts = [], info = [];
+    slides.forEach(function (s, idx) {
+      var name = s.getAttribute("data-vl-part");
+      if (idx === 0 || name !== null) parts.push({ name: name || "", n: 0 });
+      var p = parts[parts.length - 1];
+      var counted = !s.hasAttribute("data-vl-nocount");
+      if (counted) p.n++;
+      info.push({ part: parts.length - 1, k: counted ? p.n : 0 });
+    });
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    function countHTML(i) {
+      var inf = info[i], p = parts[inf.part];
+      var html = p.name ? '<span class="vl-deck__part">' + esc(p.name) + "</span>" : "";
+      html += inf.k ? "<b>" + inf.k + "</b> / " + p.n : p.n + " slides";
+      if (inf.part === 0 && parts.length > 1) {
+        var rest = [];
+        for (var q = 1; q < parts.length; q++) rest.push("+" + parts[q].n + " " + esc(parts[q].name.toLowerCase()));
+        html += '<span class="vl-deck__more">' + rest.join(" ") + "</span>";
+      }
+      return html;
     }
+
     var counts = document.querySelectorAll("[data-vl-deck-count]");
+    var prevs = document.querySelectorAll('[data-vl-deck="prev"]');
+    var nexts = document.querySelectorAll('[data-vl-deck="next"]');
     function render(i) {
       current = i;
       if (progress) progress.style.width = ((i + 1) / total * 100) + "%";
-      for (var c = 0; c < counts.length; c++) counts[c].textContent = (i + 1) + " / " + total;
+      for (var c = 0; c < counts.length; c++) counts[c].innerHTML = countHTML(i);
+      for (var a = 0; a < prevs.length; a++) prevs[a].disabled = i === 0;
+      for (var z = 0; z < nexts.length; z++) nexts[z].disabled = i === total - 1;
     }
-    render(0);
+    function show(i) {
+      for (var s = 0; s < slides.length; s++) slides[s].classList.toggle("is-current", s === i);
+      deck.scrollTop = 0;
+      render(i);
+      try { history.replaceState(null, "", "#" + (i + 1)); } catch (e) {}
+    }
+    function go(i) {
+      i = Math.max(0, Math.min(total - 1, i));
+      if (paged) show(i);
+      else if (slides[i]) slides[i].scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
-    /* Track the slide filling the viewport. */
-    if ("IntersectionObserver" in window) {
+    if (paged) {
+      var start = parseInt((location.hash || "").replace(/[^0-9]/g, ""), 10);
+      deck.classList.add("is-ready");
+      show(start >= 1 && start <= total ? start - 1 : 0);
+      /* swipe left / right on touch screens */
+      var tx = null, ty = 0;
+      deck.addEventListener("touchstart", function (e) {
+        if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }
+      }, { passive: true });
+      deck.addEventListener("touchend", function (e) {
+        if (tx === null) return;
+        var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+        tx = null;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > 1.5 * Math.abs(dy)) go(current + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+    } else {
+      render(0);
+    }
+
+    /* Scrolling decks: track the slide filling the viewport. */
+    if (paged) {
+      /* nothing to track */
+    } else if ("IntersectionObserver" in window) {
       var io = new IntersectionObserver(function (entries) {
         for (var k = 0; k < entries.length; k++) {
           if (entries[k].isIntersecting) render(slides.indexOf(entries[k].target));
