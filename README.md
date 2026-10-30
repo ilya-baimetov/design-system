@@ -79,7 +79,7 @@ Inline SVGs use short class names **scoped inside `.vl-figure`** (collision-safe
 </body>
 ```
 
-Arrow keys / space navigate, **F** fullscreen, **D** theme; **print → PDF** gives one slide per page. Slide variants: `--title --section --two --quote --image --center --dark --end`. See `slides-demo.html`.
+Arrow keys / space navigate, **F** fullscreen, **D** theme; **print → PDF** gives one slide per page. Optional on-screen controls: `nav.vl-deck__bar` with `button.vl-deck__ctl[data-vl-deck="prev|next|notes|theme|present|print"]` and `[data-vl-deck-count]` ("3 / 29"); `notes` switches the PDF between slides only (1440×900) and slides with the note band (`.vl-deck--handout`, 1440×1080). The bar is faint until hovered, and hidden in Present and in print. See `slides-demo.html`. Slide variants: `--title --section --two --quote --image --center --dark --end`. See `slides-demo.html`.
 
 Pitch additions: `--dense` (assertion + evidence, backup slides), `--wide` (full-width visuals), and `--present` (presentation scale: titles 72 px, lead 40 px, body 36 px, components scaled by `--vl-present-zoom`, default 1.8, so chart, table and stat labels stay at about 24–28 px on a 1440×900 slide; keep these slides to one idea and roughly 25 words). See `#dense` and `#present` in `slides-demo.html`.
 

@@ -28,7 +28,15 @@
 </svg>
 
 <!-- Floating theme toggle -->
-<button class="vl-deck__btn" type="button" onclick="vlToggleTheme()" aria-label="Toggle light or dark theme">Theme</button>
+<nav class="vl-deck__bar" aria-label="Deck controls">
+  <button class="vl-deck__ctl" type="button" data-vl-deck="prev" aria-label="Previous slide">&lsaquo;</button>
+  <span class="vl-deck__count" data-vl-deck-count></span>
+  <button class="vl-deck__ctl" type="button" data-vl-deck="next" aria-label="Next slide">&rsaquo;</button>
+  <button class="vl-deck__ctl" type="button" data-vl-deck="notes" aria-pressed="false">Notes in PDF</button>
+  <button class="vl-deck__ctl" type="button" data-vl-deck="theme">Theme</button>
+  <button class="vl-deck__ctl" type="button" data-vl-deck="present">Present</button>
+  <button class="vl-deck__ctl vl-deck__ctl--solid" type="button" data-vl-deck="print">Print / PDF</button>
+</nav>
 
 <div class="vl-deck">
 

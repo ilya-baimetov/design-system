@@ -334,6 +334,54 @@
 }
 .vl-deck__btn:hover{background:var(--vl-surface-3)}
 
+/* ---------------- Control bar: prev / count / next, PDF notes, present, print ----------------
+   <nav class="vl-deck__bar" aria-label="Deck controls">
+     <button class="vl-deck__ctl" type="button" data-vl-deck="prev" aria-label="Previous slide">&lsaquo;</button>
+     <span class="vl-deck__count" data-vl-deck-count></span>
+     <button class="vl-deck__ctl" type="button" data-vl-deck="next" aria-label="Next slide">&rsaquo;</button>
+     <button class="vl-deck__ctl" type="button" data-vl-deck="notes" aria-pressed="true">Notes in PDF</button>
+     <button class="vl-deck__ctl" type="button" data-vl-deck="present">Present</button>
+     <button class="vl-deck__ctl vl-deck__ctl--solid" type="button" data-vl-deck="print">Print / PDF</button>
+   </nav>
+   Optional: data-vl-deck="theme" toggles light/dark.
+   slides.js wires the buttons. "notes" toggles .vl-deck--handout (PDF page
+   1440x1080 with the note band, or 1440x900 slides only). The bar sits
+   outside .vl-deck, so it disappears in Present (full screen) and in print.
+   It stays faint until hovered or focused, so it doesn't compete with a slide. */
+.vl-deck__bar{
+  position:fixed; z-index:70;
+  top:clamp(10px,1.4vw,18px); right:clamp(10px,1.4vw,18px);
+  display:flex; align-items:center; gap:2px; padding:3px;
+  background:var(--vl-surface); border:1px solid var(--vl-border-strong);
+  border-radius:var(--vl-radius); box-shadow:var(--vl-shadow-sm);
+  opacity:.45; transition:opacity .2s ease;
+}
+.vl-deck__bar:hover,.vl-deck__bar:focus-within{opacity:1}
+.vl-deck__ctl{
+  display:inline-flex; align-items:center; justify-content:center; min-width:30px;
+  padding:6px 10px; border:0; border-radius:var(--vl-radius-sm);
+  background:transparent; color:var(--vl-text-2); cursor:pointer;
+  font-family:var(--vl-font-display); font-weight:600; font-size:12px; line-height:1;
+  letter-spacing:.05em; text-transform:uppercase; white-space:nowrap;
+}
+.vl-deck__ctl[data-vl-deck="prev"],.vl-deck__ctl[data-vl-deck="next"]{font-size:18px; padding:3px 8px}
+.vl-deck__ctl:hover{background:var(--vl-surface-3)}
+.vl-deck__ctl:focus-visible{outline:0; box-shadow:var(--vl-ring)}
+.vl-deck__ctl[aria-pressed="true"]{background:var(--vl-brand-soft); color:var(--vl-brand-text)}
+.vl-deck__ctl--solid{background:var(--vl-brand-strong); color:var(--vl-on-brand)}
+.vl-deck__ctl--solid:hover{background:var(--vl-brand-strong); filter:brightness(1.08)}
+.vl-deck__count{
+  min-width:4.6em; text-align:center; font-family:var(--vl-font-mono); font-size:12px;
+  color:var(--vl-text-muted); font-variant-numeric:tabular-nums;
+}
+@media (max-width:720px){
+  .vl-deck__bar{top:auto; bottom:10px; left:10px; right:10px; justify-content:space-between; opacity:1}
+  .vl-deck__ctl[data-vl-deck="present"]{display:none}
+}
+@media print{
+  .vl-deck__bar{display:none}
+}
+
 /* ---------------- Responsive: collapse two-col on small screens ---------------- */
 @media (max-width:720px){
   .vl-slide__cols{grid-template-columns:1fr; gap:clamp(18px,5vw,28px)}
