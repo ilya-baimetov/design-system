@@ -538,6 +538,10 @@
   .vl-slide.vl-slide,.vl-slide.vl-slide--dense,.vl-slide.vl-slide--present{padding-bottom:clamp(24px,6vw,40px)}
   .vl-slide__footer{position:static; margin-top:auto; padding:var(--vl-space-4) 0 0; flex-wrap:wrap}
   .vl-deck--paged .vl-slide.vl-slide{padding-bottom:88px}
+  /* tables in slides: tighter cells so four columns fit a 393-px screen */
+  .vl-slide table.vl-table{font-size:13px; line-height:1.35}
+  .vl-slide table.vl-table :is(th,td){padding:6px 7px}
+  .vl-slide table.vl-table thead th{font-size:10.5px; letter-spacing:.02em}
 }
 
 /* ---------------- PDF: one slide per page at native 16:10 ----------------
