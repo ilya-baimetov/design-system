@@ -1532,6 +1532,14 @@ table.vl-table--compact thead th{font-size:11px}
   border-left-color:#fff;
   font-weight:600;
 }
+/* Multi-page sites: mark the current page with aria-current="page" (outline,
+   no fill) so the scroll-spied section link (.is-active) stays the one filled item */
+.vl-toc a[aria-current="page"]:not(.is-active){
+  color:#fff;
+  font-weight:600;
+  border-left-color:var(--vl-brand);
+  background:rgba(244,242,239,.06);
+}
 
 /* ---------- Scroll progress bar ---------- */
 .vl-progress{
