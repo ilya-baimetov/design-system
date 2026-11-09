@@ -173,6 +173,17 @@ table.vl-table tbody tr:last-child td,
 .vl-yes{color:var(--vl-text); font-weight:700}
 .vl-no{color:var(--vl-brand-text); font-weight:700}
 .vl-maybe{color:var(--vl-text-faint); font-weight:700}
+/* Harvey balls: none / partly (or conditionally, or unproven) / full, for comparison tables.
+   <span class="vl-ball vl-ball--half" role="img" aria-label="Partly"></span>
+   Add --target for a planned value (dashed outline, brand colour), e.g. a product not built yet. */
+.vl-ball{display:inline-block; width:1em; height:1em; flex:none; border-radius:50%; box-sizing:border-box;
+  border:.14em solid var(--vl-text); background:transparent; vertical-align:-.14em; margin-right:.3em;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.vl-ball--half{background:linear-gradient(90deg, var(--vl-text) 50%, transparent 50%)}
+.vl-ball--full{background:var(--vl-text)}
+.vl-ball--target{border-color:var(--vl-brand); outline:.1em dashed var(--vl-brand); outline-offset:.12em}
+.vl-ball--target.vl-ball--full{background:var(--vl-brand)}
+.vl-ball--target.vl-ball--half{background:linear-gradient(90deg, var(--vl-brand) 50%, transparent 50%)}
 
 /* ============================================================
    5. CARDS
