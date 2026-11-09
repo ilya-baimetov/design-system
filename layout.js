@@ -86,6 +86,9 @@
    save/restore answers per page, auto-select the --own option when
    its note gets text and nothing else is chosen, count decided issues, mirror notes for print,
    and wire [data-vl-action="copy|download|print|reset"] buttons.
+   Multi-select: checkboxes inside a .vl-decision. data-vl-select="N" means
+   exactly N picks; the decision counts as decided (and gets
+   [data-vl-decided]) only then. Export lists every pick.
    Storage and clipboard are best-effort: every call is guarded.
    ============================================================ */
 (function () {
@@ -102,6 +105,22 @@
     var drop = c.querySelectorAll(".vl-choice__badge, .vl-choice__key");
     for (var i = 0; i < drop.length; i++) drop[i].parentNode.removeChild(drop[i]);
     return c.textContent.replace(/\s+/g, " ").trim();
+  }
+  function picks(d) { return d.querySelectorAll(".vl-choice > input:checked"); }
+  function isMulti(d) { return !!d.querySelector(".vl-choice > input[type=checkbox]"); }
+  function need(d) {
+    var n = parseInt(d.getAttribute("data-vl-select"), 10);
+    return n > 0 ? n : 0;
+  }
+  function decided(d) {
+    var n = picks(d).length;
+    if (!isMulti(d)) return n > 0;
+    return need(d) ? n === need(d) : n > 0;
+  }
+  function choiceLine(lab) {
+    var keyEl = lab.querySelector(".vl-choice__key");
+    return (keyEl ? keyEl.textContent.trim() + " " : "") + txt(lab.querySelector(".vl-choice__title")) +
+      (lab.classList.contains("vl-choice--rec") ? " (recommended)" : "");
   }
 
   function initForm(form) {
@@ -128,7 +147,10 @@
     }
     function count() {
       var ds = form.querySelectorAll(".vl-decision"), n = 0;
-      for (var i = 0; i < ds.length; i++) if (ds[i].querySelector(".vl-choice > input:checked")) n++;
+      for (var i = 0; i < ds.length; i++) {
+        if (decided(ds[i])) { n++; ds[i].setAttribute("data-vl-decided", ""); }
+        else ds[i].removeAttribute("data-vl-decided");
+      }
       var msg = n + " of " + ds.length + " decided";
       var cs = doc.querySelectorAll("[data-vl-count]");
       for (var j = 0; j < cs.length; j++) cs[j].textContent = msg;
@@ -161,19 +183,23 @@
       var title = form.getAttribute("data-vl-title") || doc.title;
       var lines = ["# " + title, "", "Exported " + new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC"];
       var ds = form.querySelectorAll(".vl-decision"), done = 0;
-      for (var i = 0; i < ds.length; i++) if (ds[i].querySelector(".vl-choice > input:checked")) done++;
+      for (var i = 0; i < ds.length; i++) if (decided(ds[i])) done++;
       lines.push(done + " of " + ds.length + " decided", "");
       for (var k = 0; k < ds.length; k++) {
         var d = ds[k];
         var num = txt(d.querySelector(".vl-decision__num"));
         lines.push("## " + (num ? num + ". " : "") + txt(d.querySelector(".vl-decision__title")));
-        var c = d.querySelector(".vl-choice > input:checked");
-        if (c) {
-          var lab = c.parentNode;
-          var keyEl = lab.querySelector(".vl-choice__key");
-          var keyTxt = keyEl ? keyEl.textContent.trim() + " " : "";
-          lines.push("Choice: " + keyTxt + txt(lab.querySelector(".vl-choice__title")) +
-            (lab.classList.contains("vl-choice--rec") ? " (recommended)" : ""));
+        var cs = picks(d);
+        if (isMulti(d)) {
+          var want = need(d);
+          if (!cs.length) lines.push("Choices: (open)");
+          else {
+            lines.push("Choices" + (want ? (cs.length === want ? " (" + want + " of " + want + ")"
+              : " (" + cs.length + " selected; select " + want + ")") : "") + ":");
+            for (var j = 0; j < cs.length; j++) lines.push("- " + choiceLine(cs[j].parentNode));
+          }
+        } else if (cs.length) {
+          lines.push("Choice: " + choiceLine(cs[0].parentNode));
         } else {
           lines.push("Choice: (open)");
         }
@@ -189,7 +215,7 @@
         if (!boxes.length) continue;
         lines.push("## " + (txt(fs.querySelector("legend")) || "Checklist"));
         for (var b = 0; b < boxes.length; b++) {
-          lines.push("- [" + (boxes[b].checked ? "x" : " ") + "] " + txt(boxes[b].parentNode.querySelector(".vl-choice__title")));
+          lines.push("- [" + (boxes[b].checked ? "x" : " ") + "] " + choiceLine(boxes[b].parentNode));
         }
         lines.push("");
       }
@@ -278,6 +304,7 @@
     window.addEventListener("beforeprint", mirrorAll);
 
     restore(); mirrorAll(); count();
+    form.setAttribute("data-vl-ready", "");
   }
 
   onReady(function () {

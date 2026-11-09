@@ -995,6 +995,9 @@ table.vl-table--compact thead th{font-size:11px}
      .vl-choice--rec     the recommended option (add a __badge inside __title)
      .vl-choice--own     the "my own solution" option; pair it with a .vl-field
      .vl-field > __label + textarea.vl-field__input + div.vl-field__print
+   Multi-select (quizzes, "pick two"): use checkboxes instead of radios and
+   put data-vl-select="N" on the .vl-decision for an exact pick count. With
+   layout.js running, the status stays Open until exactly N are ticked.
    Checked state uses :has(), so choosing works without script.
    layout.js, for any [data-vl-form] container: saves and restores
    answers per page (localStorage), auto-selects --own when its field
@@ -1038,6 +1041,13 @@ table.vl-table--compact thead th{font-size:11px}
 }
 .vl-decision:has(.vl-choice > input:checked) .vl-decision__open{display:none}
 .vl-decision:has(.vl-choice > input:checked) .vl-decision__done{display:inline}
+/* multi-select with a required count: layout.js sets [data-vl-decided] only at
+   exactly N picks (and [data-vl-ready] on the form), so a partial pick stays Open */
+[data-vl-ready] .vl-decision[data-vl-select]:not([data-vl-decided]):has(.vl-choice > input:checked) .vl-decision__status{
+  border-color:var(--vl-border-strong); background:transparent; color:var(--vl-text-muted);
+}
+[data-vl-ready] .vl-decision[data-vl-select]:not([data-vl-decided]):has(.vl-choice > input:checked) .vl-decision__open{display:inline}
+[data-vl-ready] .vl-decision[data-vl-select]:not([data-vl-decided]):has(.vl-choice > input:checked) .vl-decision__done{display:none}
 .vl-decision__grid{
   display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
   gap:var(--vl-space-3) var(--vl-space-5);
@@ -1161,6 +1171,7 @@ table.vl-table--compact thead th{font-size:11px}
     letter-spacing:.06em; color:var(--vl-brand-text);
   }
   .vl-choice:has(> input[type=checkbox]:checked)::after{content:"Done"}
+  .vl-decision .vl-choice:has(> input[type=checkbox]:checked)::after{content:"Chosen"}   /* multi-select picks, not a checklist */
   .vl-field{break-inside:avoid}
   .vl-field__input{display:none}
   .vl-field__label{font-size:9pt}

@@ -738,6 +738,9 @@
         <code>--own</code> = "my own solution", paired with a <code>.vl-field</code>). Choosing works
         without script; <code>layout.js</code> adds save/restore, a decided counter, copy / download as
         Markdown, print and reset. Print keeps every option and labels the chosen one.</p>
+      <p><b>Multi-select</b> (quizzes, "pick two"): use checkboxes inside the decision and set
+        <code>data-vl-select="N"</code> for an exact pick count. The status stays <i>Open</i> and the decision
+        isn't counted until exactly N are ticked; the export lists every pick, and flags a wrong count.</p>
     </div>
     <div data-vl-form="sg-demo" data-vl-title="Style guide demo decisions" data-vl-file="sg-demo-decisions">
       <article class="vl-decision" id="d-demo">
@@ -757,6 +760,20 @@
           <label class="vl-choice"><input type="radio" name="sg-d1" value="c"><span class="vl-choice__title"><span class="vl-choice__key">C</span>Keep it</span><span class="vl-choice__body">Fastest; leaves the gap.</span></label>
           <label class="vl-choice vl-choice--own"><input type="radio" name="sg-d1" value="own"><span class="vl-choice__title"><span class="vl-choice__key">D</span>My own solution</span><span class="vl-choice__body">Type it below; typing selects this option if nothing else is chosen.</span></label>
           <div class="vl-field"><label class="vl-field__label" for="sg-d1-note">Your solution, or a note on your choice</label><textarea class="vl-field__input" id="sg-d1-note" name="sg-d1-note" rows="2" placeholder="Your solution or a note"></textarea><div class="vl-field__print"></div></div>
+        </fieldset>
+      </article>
+      <article class="vl-decision" id="d-demo-multi" data-vl-select="2">
+        <div class="vl-decision__head">
+          <span class="vl-decision__num">2</span>
+          <h3 class="vl-decision__title">Which two fixes go in this release?</h3>
+          <span class="vl-decision__status"><span class="vl-decision__open">Pick 2</span><span class="vl-decision__done">Decided</span></span>
+        </div>
+        <fieldset class="vl-choices">
+          <legend>Select two</legend>
+          <label class="vl-choice"><input type="checkbox" name="sg-d2-a"><span class="vl-choice__title"><span class="vl-choice__key">A</span>Retry transient API errors</span></label>
+          <label class="vl-choice"><input type="checkbox" name="sg-d2-b"><span class="vl-choice__title"><span class="vl-choice__key">B</span>Rename the settings page</span></label>
+          <label class="vl-choice"><input type="checkbox" name="sg-d2-c"><span class="vl-choice__title"><span class="vl-choice__key">C</span>Validate the import schema</span></label>
+          <div class="vl-field"><label class="vl-field__label" for="sg-d2-note">Why these two</label><textarea class="vl-field__input" id="sg-d2-note" name="sg-d2-note" rows="1" placeholder="A note"></textarea><div class="vl-field__print"></div></div>
         </fieldset>
       </article>
       <fieldset class="vl-choices vl-mt-6">

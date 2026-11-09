@@ -95,7 +95,7 @@ Pitch additions: `--dense` (assertion + evidence, backup slides), `--wide` (full
 - **Figure:** `.vl-figure` > `.vl-figure__head` (`__title`, `__num`) > `.vl-figure__body` > `figcaption`
 - **Layout:** `.vl-doc` + `.vl-sidebar` + `.vl-main`, `.vl-hero`, `.vl-band`, `.vl-section`, `.vl-container`
 - **Sources / misc:** `.vl-sources`, `sup.vl-cite`, `.vl-kbd`, `.vl-tags`
-- **Decisions (review walkthroughs that print):** `[data-vl-form]` > `.vl-decision` (`__head` `__num` `__title` `__status`, `__grid` + `__label`) > `fieldset.vl-choices` > `label.vl-choice` (+ `--rec`, `--own`; `__title` `__key` `__badge` `__body`) + `.vl-field` (`__label` `__input` `__print`); `.vl-actions` with `[data-vl-action="copy|download|print|reset"]` and `[data-vl-status]`. `layout.js` saves answers per page, counts decided issues and exports Markdown; print keeps all options and labels the chosen one. See `#decisions` in `styleguide.html`.
+- **Decisions (review walkthroughs that print):** `[data-vl-form]` > `.vl-decision` (`__head` `__num` `__title` `__status`, `__grid` + `__label`) > `fieldset.vl-choices` > `label.vl-choice` (+ `--rec`, `--own`; `__title` `__key` `__badge` `__body`) + `.vl-field` (`__label` `__input` `__print`); `.vl-actions` with `[data-vl-action="copy|download|print|reset"]` and `[data-vl-status]`. `layout.js` saves answers per page, counts decided issues and exports Markdown; print keeps all options and labels the chosen one. **Multi-select** (quizzes): checkboxes inside a `.vl-decision` plus `data-vl-select="N"`; it counts as decided only at exactly N picks, and the export lists every pick. See `#decisions` in `styleguide.html`.
 
 ## Using it on vibeloom.ai
 
