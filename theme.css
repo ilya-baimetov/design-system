@@ -427,6 +427,7 @@ table.vl-table tbody tr:last-child td,
 .vl-level > i:nth-child(1){height:.42em}
 .vl-level > i:nth-child(2){height:.71em}
 .vl-level > i:nth-child(3){height:1em}
+.vl-level--0 > i{background:transparent}
 .vl-level--1 > i:nth-child(-n+1), .vl-level--2 > i:nth-child(-n+2), .vl-level--3 > i{background:var(--vl-text)}
 .vl-level--target > i{border-color:var(--vl-brand); border-style:dashed}
 .vl-level--target.vl-level--1 > i:nth-child(-n+1), .vl-level--target.vl-level--2 > i:nth-child(-n+2), .vl-level--target.vl-level--3 > i{background:var(--vl-brand)}
