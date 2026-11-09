@@ -418,6 +418,15 @@ table.vl-table tbody tr:last-child td,
 .vl-ball--target{border-color:var(--vl-brand); outline:.1em dashed var(--vl-brand); outline-offset:.12em; margin:0 .5em 0 .22em}
 .vl-ball--target.vl-ball--full{background:var(--vl-brand)}
 .vl-ball--target.vl-ball--half{background:linear-gradient(90deg, var(--vl-brand) 50%, transparent 50%)}
+/* Level meter: 0–3 stacked rectangles, filled from the bottom, for rated comparison tables.
+   <span class="vl-level vl-level--2" role="img" aria-label="2 of 3"><i></i><i></i><i></i></span>
+   --0 to --3 set the fill; add --target for a planned value (dashed, brand colour). */
+.vl-level{display:inline-flex; flex-direction:column-reverse; gap:.09em; width:.9em; height:1.05em; flex:none;
+  vertical-align:-.16em; margin-right:.4em; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.vl-level > i{flex:1; display:block; box-sizing:border-box; border:.09em solid var(--vl-text); border-radius:.08em; background:transparent}
+.vl-level--1 > i:nth-child(-n+1), .vl-level--2 > i:nth-child(-n+2), .vl-level--3 > i{background:var(--vl-text)}
+.vl-level--target > i{border-color:var(--vl-brand); border-style:dashed}
+.vl-level--target.vl-level--1 > i:nth-child(-n+1), .vl-level--target.vl-level--2 > i:nth-child(-n+2), .vl-level--target.vl-level--3 > i{background:var(--vl-brand)}
 
 /* ============================================================
    5. CARDS
