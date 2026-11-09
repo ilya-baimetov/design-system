@@ -415,7 +415,7 @@ table.vl-table tbody tr:last-child td,
   -webkit-print-color-adjust:exact; print-color-adjust:exact}
 .vl-ball--half{background:linear-gradient(90deg, var(--vl-text) 50%, transparent 50%)}
 .vl-ball--full{background:var(--vl-text)}
-.vl-ball--target{border-color:var(--vl-brand); outline:.1em dashed var(--vl-brand); outline-offset:.12em}
+.vl-ball--target{border-color:var(--vl-brand); outline:.1em dashed var(--vl-brand); outline-offset:.12em; margin:0 .5em 0 .22em}
 .vl-ball--target.vl-ball--full{background:var(--vl-brand)}
 .vl-ball--target.vl-ball--half{background:linear-gradient(90deg, var(--vl-brand) 50%, transparent 50%)}
 
